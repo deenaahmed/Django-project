@@ -22,9 +22,9 @@ class Post(models.Model):
 
     cat = models.ForeignKey(Category)
 
-    likes = models.IntegerField()
+    likes = models.IntegerField(default=0)
 
-    dislikes = models.IntegerField()
+    dislikes = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -54,7 +54,7 @@ class Category_Subscribe(models.Model):
 
     cat = models.ForeignKey(Category)
 
-    status = models.IntegerField()
+    status = models.PositiveSmallIntegerField()
 
 
 
