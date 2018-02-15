@@ -1,0 +1,61 @@
+{%load static%}
+<html>
+<body>
+	<style>
+	.divstyle{
+		border: 1px solid black;
+	}
+	.divstyle1{
+		border: 1px solid black;
+		padding-right: 10px;
+	}
+	</style>
+	 <h1>{{post_list.title}}</h1> 
+	<img width=50px height=100px src="{%static 'image/01.png' %}"> 
+	 <h4>Created by {{post_list.author}} at {{post_list.created_at}} </h4>
+	<h4>Category: {{post_list.cat}}</h4>
+	<p>{{post_list.body}}</p> 
+	<button>Like</button> <button>Dislike</button>
+	<form method="POST" id="commentform"> 
+		{% csrf_token%}
+		{{form.as_p}}
+		<textarea type="text" id="commenttext"></textarea>
+		<button type="submit">add comment</button>
+	</form>
+	{% for c in comment_list%}
+		<div class="divstyle">
+			<h5>{{c.user_id}}</h5>
+			<p>{{c.body}}</p>
+			<h5>{{c.created_at}}</h5>
+			<button>Reply</button>
+		</div>
+		{% for r in reply_list%}
+			{% ifequal r.comment_id c.id %}
+			<div class="divstyle1">
+			<h5>{{r.user_id}}</h5>
+			<p>{{r.body}}</p>
+			<h5>{{r.created_at}}</h5>
+			</div>
+			{% endifequal %}
+		{% endfor %}
+	{% endfor %}
+	<script src="jquery-3.1.0.min.js"></script>
+	<!-- <script>
+	$(document).on('submit','#commentform',function(e){
+		e.preventDefault();
+		$.ajax({
+			type: 'POST',
+			url: 'views.postPage',
+			data:{
+				commentbody:$("#commenttext").val(),
+				csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+			}
+			success:function(){
+				alert("sucess")
+			}
+		});
+	});
+
+	</script> -->
+</body>
+</html>

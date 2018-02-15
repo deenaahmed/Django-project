@@ -1,7 +1,5 @@
 from django.db import models
-
 from django.contrib.auth.models import User
-
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -32,9 +30,6 @@ class Post(models.Model):
         return self.title
 
 
-
-
-
 class Comment(models.Model):
 
     user = models.ForeignKey(User)
@@ -46,8 +41,6 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-
-
 class Category_Subscribe(models.Model):
 
     user = models.ForeignKey(User)
@@ -55,8 +48,6 @@ class Category_Subscribe(models.Model):
     cat = models.ForeignKey(Category)
 
     status = models.IntegerField()
-
-
 
 
 class BadWord(models.Model):
@@ -90,13 +81,3 @@ class Reply(models.Model):
     body = models.TextField()
 
     created_at = models.DateTimeField(auto_now_add=True)
-
-
-
-
-
-
-
-
-
-
