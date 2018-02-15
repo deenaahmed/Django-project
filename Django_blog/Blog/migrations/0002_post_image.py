@@ -7,16 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Blog', '0005_auto_20180214_1212'),
+        ('Blog', '0001_initial'),
     ]
 
     operations = [
-        migrations.RemoveField(
+        migrations.AddField(
             model_name='post',
-            name='dislikes',
-        ),
-        migrations.RemoveField(
-            model_name='post',
-            name='likes',
+            name='image',
+            field=models.FileField(null=True, upload_to=b'', blank=True),
         ),
     ]
