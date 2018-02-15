@@ -7,7 +7,6 @@
 	}
 	.divstyle1{
 		border: 1px solid black;
-		padding-right: 10px;
 	}
 	</style>
 	 <h1>{{post_list.title}}</h1> 
@@ -19,7 +18,7 @@
 	<form method="POST" id="commentform"> 
 		{% csrf_token%}
 		{{form.as_p}}
-		<textarea type="text" id="commenttext"></textarea>
+		<input type="text" id="commenttext"></input>
 		<button type="submit">add comment</button>
 	</form>
 	{% for c in comment_list%}
@@ -40,14 +39,14 @@
 		{% endfor %}
 	{% endfor %}
 	<script src="jquery-3.1.0.min.js"></script>
-	<!-- <script>
+	<script>
 	$(document).on('submit','#commentform',function(e){
 		e.preventDefault();
 		$.ajax({
 			type: 'POST',
-			url: 'views.postPage',
+			url: 'views.new_comment',
 			data:{
-				commentbody:$("#commenttext").val(),
+				commentbody:$('#commenttext').val(),
 				csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
 			}
 			success:function(){
@@ -56,6 +55,6 @@
 		});
 	});
 
-	</script> -->
+	</script> 
 </body>
 </html>
