@@ -7,11 +7,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Blog', '0003_post_image'),
+        ('Blog', '0001_initial'),
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='post',
             name='image',
             field=models.FileField(null=True, upload_to=b'', blank=True),
