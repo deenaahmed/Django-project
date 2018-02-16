@@ -16,21 +16,20 @@ class Migration(migrations.Migration):
             name='BadWord',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=30)),
+                ('name', models.CharField(max_length=150)),
             ],
         ),
         migrations.CreateModel(
             name='Category',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=20)),
+                ('name', models.CharField(max_length=150)),
             ],
         ),
         migrations.CreateModel(
             name='Category_Subscribe',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('status', models.IntegerField()),
                 ('cat', models.ForeignKey(to='Blog.Category')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
@@ -44,16 +43,21 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Like',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('state', models.IntegerField()),
+            ],
+        ),
+        migrations.CreateModel(
             name='Post',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('title', models.CharField(max_length=20)),
+                ('title', models.CharField(max_length=150)),
                 ('body', models.TextField()),
-                ('likes', models.IntegerField()),
-                ('dislikes', models.IntegerField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('cat_id', models.ForeignKey(to='Blog.Category')),
+                ('cat', models.ForeignKey(to='Blog.Category')),
             ],
         ),
         migrations.CreateModel(
@@ -77,13 +81,23 @@ class Migration(migrations.Migration):
             name='Tag',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=20)),
+                ('name', models.CharField(max_length=150)),
             ],
         ),
         migrations.AddField(
             model_name='post_tag',
             name='tag',
             field=models.ForeignKey(to='Blog.Tag'),
+        ),
+        migrations.AddField(
+            model_name='like',
+            name='post',
+            field=models.ForeignKey(to='Blog.Post'),
+        ),
+        migrations.AddField(
+            model_name='like',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='comment',
