@@ -19,8 +19,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-
-    url(r'^loginAPP/',include('loginAPP.urls')),
+#m7mod
+    url(r'^loginApp/',include('loginApp.urls')),
     url(r'^', include('Blog.urls')),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS

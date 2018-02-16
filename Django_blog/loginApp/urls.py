@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url,patterns, include
 from django.contrib import admin
-
+from loginApp import views
 # urlpatterns = [
 #      #url(r'^admin/', include(admin.site.urls)),
 #      url (r'^login/$', 'django.contrib.auth.views.login'),
@@ -25,11 +25,11 @@ from django.contrib import admin
 
 
 urlpatterns = patterns('',
-(r'^$',views.main_page),
-(r'^user/(\w+)/$',view.user_page),
-(r'^login/$', 'django.contrib.auth.views.login'),
-(r'^logout/$',views.logout_page),
-(r'^register/$', views.register_page)
+(r'^$',views.register),
+#(r'^user/(\w+)/$',views.user_page),
+(r'^login/$', views.login_form),
+#(r'^logout$',views.logout_page),
+(r'^register/$', views.register)
 )
 
 # urlpatterns = patterns('',(r'^$', main_page),   
