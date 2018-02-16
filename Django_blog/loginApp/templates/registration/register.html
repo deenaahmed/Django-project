@@ -1,4 +1,4 @@
-{% extends "registration/base.html" %}
+<!-- {% extends "registration/base.html" %}
 {% block title %}User Registration{% endblock %}
 {% block head %}User Registration{% endblock %}
 {% block content %}
@@ -8,4 +8,34 @@
 <input type="submit" value="register" />
 {% csrf_token %}
 </form>
-{% endblock %}
+{% endblock %} -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    
+
+    <b>username:</b>
+    <input type="text" name="username" {{form.username.id_for_input}}>
+    <br><br>
+
+    <b>Password:</b>
+    <input type="password" name="password" {{form.username.id_for_input}}>
+    <br><br>
+
+    <input type="submit" value="Login">
+
+</form>
+
+
+</body>
+</html>

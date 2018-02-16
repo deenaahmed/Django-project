@@ -25,7 +25,7 @@ def register(request):
         if usr_form.is_valid():
             usr_form.save()
             return HttpResponseRedirect("registeration/main_page")
-    return render(request, "registration/formpage.html",{"form":usr_form})
+    return render(request, "registration/register.html",{"form":usr_form})
 
 def login_form(request):
 
