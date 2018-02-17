@@ -5,7 +5,6 @@ from .forms import commentform
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 import re
-
 from django.db.models import Q
 
 

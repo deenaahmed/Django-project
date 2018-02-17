@@ -16,7 +16,6 @@ from django.conf import global_settings
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print(BASE_DIR)
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -81,9 +80,9 @@ WSGI_APPLICATION = 'Django_blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blog',
+        'NAME': 'Django-blog',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': '0810',
     }
 }
 
