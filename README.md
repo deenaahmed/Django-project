@@ -21,7 +21,7 @@ sudo apt install python-pip
 pip install setuptools
 ```
 
-here is the final step to be able to run the projcet
+Here is the final step to be able to run the project
 
 ```
 sudo pip install django-jet
