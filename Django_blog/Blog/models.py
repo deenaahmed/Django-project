@@ -1,7 +1,5 @@
 from django.db import models
-
 from django.contrib.auth.models import User
-
 
 
 class Tag(models.Model):
@@ -10,7 +8,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Category(models.Model):
     name = models.CharField(max_length=150)
@@ -29,6 +26,7 @@ class Post(models.Model):
     body = models.TextField()
 
     image = models.FileField(null=True, blank=True)
+
 
     cat = models.ForeignKey(Category)
 
@@ -81,7 +79,6 @@ class Like(models.Model):
     post = models.ForeignKey(Post)
 
     state = models.IntegerField()
-
 
 
 
