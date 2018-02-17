@@ -4,12 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/Django_blog/urls.py" description="urlpatterns = [&#10;    ##url(r'^/', include('Blog/', ..." line="21" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02c098d6-ec78-4d6a-9c14-80ac2e5d2d9a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Blog/admin.py" afterPath="$PROJECT_DIR$/Blog/admin.py" />
-      <change beforePath="$PROJECT_DIR$/Blog/models.py" afterPath="$PROJECT_DIR$/Blog/models.py" />
-      <change beforePath="$PROJECT_DIR$/Django_blog/settings.py" afterPath="$PROJECT_DIR$/Django_blog/settings.py" />
-    </list>
+    <list default="true" id="02c098d6-ec78-4d6a-9c14-80ac2e5d2d9a" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
