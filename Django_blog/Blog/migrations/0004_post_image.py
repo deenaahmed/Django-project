@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Blog', '0001_initial'),
+        ('Blog', '0003_remove_post_image'),
     ]
 
     operations = [
-        migrations.RenameField(
+        migrations.AddField(
             model_name='post',
-            old_name='cat_id',
-            new_name='cat',
+            name='image',
+            field=models.FileField(null=True, upload_to=b'', blank=True),
         ),
     ]

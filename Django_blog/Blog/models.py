@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Category(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=150)
 
     def __str__(self):
         return self.name
@@ -10,19 +10,15 @@ class Category(models.Model):
 
 class Post(models.Model):
 
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=150)
 
     author = models.ForeignKey(User)
 
     body = models.TextField()
 
-    #image = models.ImageField(upload_to = 'pic_folder/')
+    #image = models.FileField(null=True, blank=True)
 
     cat = models.ForeignKey(Category)
-
-    likes = models.IntegerField()
-
-    dislikes = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -47,12 +43,10 @@ class Category_Subscribe(models.Model):
 
     cat = models.ForeignKey(Category)
 
-    status = models.IntegerField()
-
 
 class BadWord(models.Model):
 
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=150)
 
     def __str__(self):
         return self.name
@@ -60,7 +54,7 @@ class BadWord(models.Model):
 
 class Tag(models.Model):
 
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=150)
 
     def __str__(self):
         return self.name
@@ -81,3 +75,21 @@ class Reply(models.Model):
     body = models.TextField()
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Like(models.Model):
+
+    user = models.ForeignKey(User)
+
+    post = models.ForeignKey(Post)
+
+    state = models.IntegerField()
+
+
+
+
+
+
+
+
+

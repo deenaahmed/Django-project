@@ -8,6 +8,9 @@
 	.divstyle1{
 		border: 1px solid black;
 	}
+	.divstylereply{
+		border: 1px solid black;
+	}
 	</style>
 	 <h1>{{post_list.title}}</h1> 
 	<img width=50px height=100px src="{%static 'image/01.png' %}"> 
@@ -15,45 +18,159 @@
 	<h4>Category: {{post_list.cat}}</h4>
 	<p>{{post_list.body}}</p> 
 	<button>Like</button> <button>Dislike</button>
-	<form method="POST" id="commentform"> 
+	<form id="comment-form" method="post" role="form"> 
 		{% csrf_token%}
-		{{form.as_p}}
-		<input type="text" id="commenttext"></input>
-		<button type="submit">add comment</button>
+		{{form.as_p}} 
+		<textarea id="comment" name="body" class="form-control" rows="4" placeholder="input comment!"></textarea>
+    <button type="submit" class="btn btn-raised btn-primary pull-right">Add comment</button>
 	</form>
-	{% for c in comment_list%}
-		<div class="divstyle">
-			<h5>{{c.user_id}}</h5>
-			<p>{{c.body}}</p>
-			<h5>{{c.created_at}}</h5>
-			<button>Reply</button>
+	<!-- {% with 0 as counterlhtml %} -->
+	{% for c,cc in zipped_data %}
+	<br/>
+		<div class="divstyle comment">
+			{{c.user_id}}
+			<br/>
+			<br/>
+			<!-- {{comment_body.counterlhtml}} -->
+			<!-- {% for cc in comment_body %}
+			{{cc}}
+			{% endfor %}  {{c.body}}  -->
+			{{cc}}
+			 
+			<br/>
+			<br/>
+			{{c.created_at}}
+			<br/>
+			<br/>
+			<button class="replyclass" name="{{c.id}}">Reply</button>
+			<br/>
+			<br/>
+			<a href="deletecomment/comment_id={{c.id}}">Delete</a>
+			<br/>
+			<br/>
+			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
+			
 		</div>
 		{% for r in reply_list%}
 			{% ifequal r.comment_id c.id %}
-			<div class="divstyle1">
-			<h5>{{r.user_id}}</h5>
-			<p>{{r.body}}</p>
-			<h5>{{r.created_at}}</h5>
+			<div  class="divstylereply {{c.id}}" style="display: none;" >
+			{{r.username}}
+			<br/>
+			{{r.body}}
+			<br/>
+			{{r.created_at}}
+			<br/>
 			</div>
 			{% endifequal %}
 		{% endfor %}
+		<form action="." id="{{c.id}}" method="post" style="display: none;">
+            {% csrf_token %}
+            {{form.as_p}} 
+            <!-- Hidden input for parent comment.id -->
+            <textarea  name="parent_id" value="{{ comment.id }}" ></textarea>
+           <button  type="submit">Reply</button> 
+        </form>
 	{% endfor %}
-	<script src="jquery-3.1.0.min.js"></script>
+	<!-- {% endwith %} -->
+	<!-- <script src="jquery-3.1.0.min.js"></script> -->
+	<script src="{% static 'js/jquery.min.js'%}"></script>
+  <!-- <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script> -->
+ 
 	<script>
-	$(document).on('submit','#commentform',function(e){
+	//$(".divstylereply").hide();
+	$(".viewrepliesbutton").on("click",function(){
+		if(this.innerHTML=="View replies"){
+		$lid=this.name
+		//console.log($lid)
+		var arr= document.getElementsByClassName($lid)
+		for(var i=0;i<arr.length;i++)
+		{
+			arr[i].style.display="block"
+		}
+		//document.getElementById($lid).style.display="block"
+		this.innerHTML="Hide replies"
+	}
+	else
+	{
+		this.innerHTML="View replies"
+		$lid=this.name
+		//console.log($lid)
+		//document.getElementById($lid).style.display="none"
+		var arr= document.getElementsByClassName($lid)
+		for(var i=0;i<arr.length;i++)
+		{
+			arr[i].style.display="none"
+		}
+
+	}
+
+	});
+	$(".replyclass").on("click",function(){
+		$lid=this.name
+		document.getElementById($lid).style.display="block"
+	});
+
+
+
+
+	/* $(document).on('submit','#comment-form',function(e){
 		e.preventDefault();
 		$.ajax({
 			type: 'POST',
-			url: 'views.new_comment',
+			url: 'simple/ajax',
 			data:{
-				commentbody:$('#commenttext').val(),
-				csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-			}
+				commentbody:$('#comment').val(),
+			},
 			success:function(){
 				alert("sucess")
-			}
+			},
 		});
-	});
+	}); */
+
+	/*$('#comment-form').submit(function(){
+		console.log("ana") 
+    $.ajax({
+        type:"POST",
+        url: 'http://127.0.0.1:8000/Blog/single/ajax',
+        data:{"comment":$("#comment").val(),
+        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+        	data = json.parse(data);
+            console.log(data);
+            $("#comment").val("");
+            $(".comment").prepend(data);   
+        },
+    });
+
+
+    return false;
+});*/
+/*$('#comment-form').on('submit', function(event){
+    event.preventDefault();
+    console.log("form submitted!")  
+    create_post();
+});
+
+function create_post() {
+    $.ajax({
+        url : "/create_post/", // the endpoint
+        type : "POST", // http method
+        data : { body : $('#comment').val()}, // data sent with the post request
+
+        // handle a successful response
+        success : function(json) {
+            $('#comment').val(''); // remove the value from the input
+            console.log(json); // log the returned json to the console
+            // this causes the page to refresh and the form to POST
+            console.log("success"); 
+        },
+
+
+    });
+};*/
 
 	</script> 
 </body>
