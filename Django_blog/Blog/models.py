@@ -16,7 +16,8 @@ class Post(models.Model):
 
     body = models.TextField()
 
-    #image = models.FileField(null=True, blank=True)
+    image = models.FileField(null=True, blank=True)
+
 
     cat = models.ForeignKey(Category)
 

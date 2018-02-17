@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = (
     'Blog',
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -106,12 +108,12 @@ STATIC_URL = os.path.join(BASE_DIR,'Blog/static/')
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 
-#STATIC_URL = os.path.join(BASE_DIR,'static/')
-#PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-#STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_URL = os.path.join(BASE_DIR,'static/')
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 
-#MEDIA_URL = "/media/"
-#MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 

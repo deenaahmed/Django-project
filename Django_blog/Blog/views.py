@@ -4,6 +4,22 @@ from .models import *
 from .forms import commentform
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
+import re
+
+from django.db.models import Q
+
+
+def allPosts(request):
+    all_posts = Post.objects.all()
+    context = {"allPosts": all_posts}
+    return render(request, "blog/home.html", context)
+
+
+def search(request):
+
+    found_entries = Post.objects.filter(title__icontains=request.GET['term']).order_by('created_at')
+    context = {"allPosts": found_entries}
+    return render(request, "blog/home.html", context)
 
 # Create your views here.
 
@@ -123,6 +139,7 @@ def comment_delete(request,comment_id,post_id,user_id):
 #	comm=comment.objects.get(id=comment_id)
 #	comm.delete()	
 #	return HttpResponseRedirect('allstudent/')
+
 
 
 

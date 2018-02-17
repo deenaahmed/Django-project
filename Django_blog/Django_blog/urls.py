@@ -20,8 +20,20 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^', include('Blog.urls')),
+<<<<<<< HEAD
+=======
+    url(r'^jet/', include('jet.urls', 'jet')),
+    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
+    url(r'^admin/', include(admin.site.urls)),
+>>>>>>> master
     url(r'^Blog/', include("Blog.urls"))
 ]
 
 
+<<<<<<< HEAD
 
+=======
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> master
