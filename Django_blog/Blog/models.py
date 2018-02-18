@@ -9,9 +9,11 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
 class Category(models.Model):
     name = models.CharField(max_length=150)
-    subscribe = models.ManyToManyField(User, related_name="sub_cat" ,null=True , blank=True)
+
+    subscribe = models.ManyToManyField(User, related_name="sub_cat",null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -28,7 +30,7 @@ class Post(models.Model):
     image = models.FileField(null=True, blank=True)
 
 
-    cat = models.ForeignKey(Category)
+    cat = models.ForeignKey(Category, related_name="category_post")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -58,7 +60,6 @@ class BadWord(models.Model):
 
     def __str__(self):
         return self.name
-
 
 
 

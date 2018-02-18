@@ -1,3 +1,5 @@
+
+
 {%load static%}
 <html>
 <body>
@@ -9,34 +11,38 @@
 		border: 1px solid black;
 	}
 	.divstylereply{
+		offset:50px;
 		border: 1px solid black;
 	}
 	</style>
 	 <h1>{{post_list.title}}</h1> 
-	<img width=50px height=100px src="{%static 'image/01.png' %}"> 
+	<img width=50px height=100px src="{%static '{{post_list.image}}' %}"> 
 	 <h4>Created by {{post_list.author}} at {{post_list.created_at}} </h4>
 	<h4>Category: {{post_list.cat}}</h4>
 	<p>{{post_list.body}}</p> 
-	<button>Like</button> <button>Dislike</button>
-	<form id="comment-form" method="post" role="form"> 
-		{% csrf_token%}
-		{{form.as_p}} 
-		<textarea id="comment" name="body" class="form-control" rows="4" placeholder="input comment!"></textarea>
-    <button type="submit" class="btn btn-raised btn-primary pull-right">Add comment</button>
-	</form>
-	<!-- {% with 0 as counterlhtml %} -->
-	{% for c,cc in zipped_data %}
+	<div> Related tags:
+	{% for t in tag_list %}
+			{% ifequal t.id post_list.tag %}
+			<div>{{t.name}}</div>
+			{% endifequal %}
+		{% endfor %}
+
+	</div>
+
+	<p>
+	<button id="likebutton" name="{{post_list.id}}">Like</button> <button id="dislikebutton" name="{{post_list.id}}">Dislike</button>
 	<br/>
-		<div class="divstyle comment">
-			{{c.user_id}}
+		<textarea id="comment" class="form-control" rows="4" placeholder="input comment!" ></textarea>
+    <button class="btn btn-raised btn-primary pull-right" value="{{post_list.id}}" id="comment-formbutton">Add comment</button>
+	
+	<div id="allcomments">
+		{% for c,cc,ccc in zipped_data %}
+	<br/>
+		<div class="divstyle comment " id="class{{c.id}}"> <!-- viewrepliesbutton kan feh hna class -->
+			{{ccc}}
 			<br/>
 			<br/>
-			<!-- {{comment_body.counterlhtml}} -->
-			<!-- {% for cc in comment_body %}
 			{{cc}}
-			{% endfor %}  {{c.body}}  -->
-			{{cc}}
-			 
 			<br/>
 			<br/>
 			{{c.created_at}}
@@ -45,69 +51,89 @@
 			<button class="replyclass" name="{{c.id}}">Reply</button>
 			<br/>
 			<br/>
-			<a href="deletecomment/comment_id={{c.id}}">Delete</a>
+			<button name="{{c.id}}" class="deleteclass" >Delete</button>
 			<br/>
 			<br/>
 			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
-			
-		</div>
-		{% for r in reply_list%}
+		<div id="allreplies{{ c.id }}" class=" {{c.id}}" style="display: none;">
+		{% for r,rr,rrr in zipped_data1 %}
 			{% ifequal r.comment_id c.id %}
-			<div  class="divstylereply {{c.id}}" style="display: none;" >
-			{{r.username}}
+			<div  class="divstylereply {{c.id}}"  >
+			{{rrr}}
 			<br/>
-			{{r.body}}
+			{{rr}}
 			<br/>
 			{{r.created_at}}
 			<br/>
 			</div>
 			{% endifequal %}
 		{% endfor %}
-		<form action="." id="{{c.id}}" method="post" style="display: none;">
-            {% csrf_token %}
-            {{form.as_p}} 
-            <!-- Hidden input for parent comment.id -->
-            <textarea  name="parent_id" value="{{ comment.id }}" ></textarea>
-           <button  type="submit">Reply</button> 
-        </form>
+		<div  id="replyform{{c.id}}" class="{{c.id}}" >
+            <textarea  class="{{c.id}}" name="parent_id"  id="input{{ c.id }}" ></textarea>
+           <button  class="reply-formbutton {{c.id}}" value="{{ c.id }}">Reply</button> 
+        </div>
+	</div>
+	</div>
 	{% endfor %}
-	<!-- {% endwith %} -->
-	<!-- <script src="jquery-3.1.0.min.js"></script> -->
+	</div>
+	
 	<script src="{% static 'js/jquery.min.js'%}"></script>
-  <!-- <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script> -->
  
 	<script>
-	//$(".divstylereply").hide();
+	//$document.ready(function(){
+	//$("#allcomments").on("change",function(){
+	$(".deleteclass").on("click",function(){
+		comment_id=this.name
+		$.ajax({
+        url: '/double/',
+        data:{
+        	'comment_id':comment_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+            console.log(data);
+            if(data.x==1){
+            	var c = document.getElementById("class" + comment_id)
+            	document.getElementById("class" + comment_id).innerHTML=""
+            	c.parentNode.removeChild(c)
+            }
+        }
+    });
+
+	});
+
+
 	$(".viewrepliesbutton").on("click",function(){
 		if(this.innerHTML=="View replies"){
-		$lid=this.name
-		//console.log($lid)
-		var arr= document.getElementsByClassName($lid)
-		for(var i=0;i<arr.length;i++)
+			this.innerHTML="Hide replies"
+		var lid=this.name
+		var arr= document.getElementById("allreplies" + lid)
+		//var arr= 
+		arr.style.display="block"
+		/*for(var i=0;i<arr.length;i++)
 		{
 			arr[i].style.display="block"
-		}
-		//document.getElementById($lid).style.display="block"
-		this.innerHTML="Hide replies"
+		}*/
 	}
 	else
 	{
 		this.innerHTML="View replies"
-		$lid=this.name
-		//console.log($lid)
-		//document.getElementById($lid).style.display="none"
-		var arr= document.getElementsByClassName($lid)
-		for(var i=0;i<arr.length;i++)
-		{
-			arr[i].style.display="none"
-		}
+		var lid=this.name
+		var arr= document.getElementById("allreplies" + lid)
+		//var arr= 
+		arr.style.display="none"
+		//for(var i=0;i<arr.length;i++)
+		//{
+			//arr[i].style.display="none"
+		//}
 
 	}
 
 	});
 	$(".replyclass").on("click",function(){
-		$lid=this.name
-		document.getElementById($lid).style.display="block"
+		var lid=this.name
+		document.getElementById("allreplies" + lid).style.display="block"
 	});
 
 
@@ -127,27 +153,80 @@
 		});
 	}); */
 
-	/*$('#comment-form').submit(function(){
-		console.log("ana") 
+	/*$("#likebutton").click(function(){
+		post_id=this.name
+		console.log(post_id)
+		$.ajax({
+			crossOrigin: true,
+        url: 'simple/ajax/deena/'+post_id
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+        }
+        });
+	});*/
+
+$(".reply-formbutton").click(function(){  
+		comment_id=this.value
+		reply_text=document.getElementById("input" + comment_id).value
+		if(reply_text!=""){
     $.ajax({
-        type:"POST",
-        url: 'http://127.0.0.1:8000/Blog/single/ajax',
-        data:{"comment":$("#comment").val(),
-        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+        url: '/triple/',
+        data:{
+        	'bodyreply':reply_text,
+        	'comment_id_reply':comment_id
     	},
    		dataType: 'json',
         success:function(data){
         	console.log("success");
-        	data = json.parse(data);
             console.log(data);
-            $("#comment").val("");
-            $(".comment").prepend(data);   
-        },
+            console.log(data.username);
+            console.log(data.createdat);
+            console.log(data.idd);
+            $("#input" + comment_id).val("");
+            $("#allreplies" + comment_id).prepend('<div  class="divstylereply comment_id" style="display: block;" >' + data.username + '<br/><br/>' + reply_text + '<br/><br/>' + data.createdat + '</div>');
+        }
     });
+}
+else
+{
+	console.log("l reply fady")
+}
+});
+
+//});
 
 
-    return false;
-});*/
+	$("#comment-formbutton").click(function(){ 
+		comment_text=$("#comment").val()
+		post_id=$("#comment-formbutton").val()
+		if(comment_text!=""){
+    $.ajax({
+        url: '/single/',
+        data:{
+        	'body':comment_text,
+        	'post_id':post_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+            console.log(data);
+            console.log(data.username);
+            console.log(data.createdat);
+            console.log(data.idd)
+            $("#comment").val("");
+            $("#allcomments").append('<br/><div class="divstyle comment" id="class' + data.idd + '">' + data.username + '<br/><br/>' + comment_text + '<br/><br/>' + data.createdat + '<br/><br/><button class="replyclass" name="' + data.idd + '"> Reply </button><br/><br/><button name="' + data.idd + '" class="deleteclass" >Delete</button><br/><br/><button class="viewrepliesbutton" name="' + data.idd + '" > View replies </button><div id="allreplies' + data.idd + '" class="' + data.idd + '" style="display: none;"><div  id="replyform' + data.idd + '" class="' + data.idd + '" ><textarea  class="' + data.idd + '" name="parent_id"  id="input' + data.idd + '" ></textarea><button  class="reply-formbutton ' + data.idd + '" value="' + data.idd + '">Reply</button></div></div></div>');
+        }
+    });
+}
+else
+{
+	console.log("l comment fady")
+}
+});
+
+
+
 /*$('#comment-form').on('submit', function(event){
     event.preventDefault();
     console.log("form submitted!")  
@@ -171,7 +250,7 @@ function create_post() {
 
     });
 };*/
-
+//});
 	</script> 
 </body>
 </html>
