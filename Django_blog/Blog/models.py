@@ -3,8 +3,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Tag(models.Model):
+
+    name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
+
+
 class Category(models.Model):
     name = models.CharField(max_length=150)
+
+    subscribe = models.ManyToManyField(User, related_name="sub_cat",null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -20,9 +30,11 @@ class Post(models.Model):
 
     image = models.FileField(null=True, blank=True)
 
-    cat = models.ForeignKey(Category)
+    cat = models.ForeignKey(Category, related_name="category_post")
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    tag = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.title
@@ -39,34 +51,12 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class Category_Subscribe(models.Model):
-
-    user = models.ForeignKey(User)
-
-    cat = models.ForeignKey(Category)
-
-
 class BadWord(models.Model):
 
     name = models.CharField(max_length=150)
 
     def __str__(self):
         return self.name
-
-
-class Tag(models.Model):
-
-    name = models.CharField(max_length=150)
-
-    def __str__(self):
-        return self.name
-
-
-class Post_Tag(models.Model):
-
-    tag = models.ForeignKey(Tag)
-
-    post = models.ForeignKey(Post)
 
 
 class Reply(models.Model):
