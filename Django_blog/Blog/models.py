@@ -12,7 +12,6 @@ class Tag(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=150)
-    subscribe = models.ManyToManyField(User, related_name="sub_cat")
 
     subscribe = models.ManyToManyField(User, related_name="sub_cat",null=True, blank=True)
 
