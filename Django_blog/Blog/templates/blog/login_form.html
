@@ -11,14 +11,14 @@
     {% csrf_token %}
 
     <b>Username:</b>
-    <input type="text"   class="uname "        name="username"   id="userlogin " >
+    <input type="text" name="username">
     <br><br>
 
     <b>Password:</b>
-    <input type="password" name="password"     class=" youpasswd" id="passwordlogin"  >
+    <input type="password" name="password">
     <br><br>
 
-    <input type="submit" value="Login"    class="login button"  id="submitlogin "  >
+    <input type="submit" value="Login">
 
 </form>
 

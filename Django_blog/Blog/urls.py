@@ -12,5 +12,7 @@ urlpatterns = [
 
     url(r'^likepost/$', views.likePost, name='likepost'),   # likepost view at /likepost
     url(r'^dislikePost/$', views.dislikePost, name='dislikepost'),   # likepost view at /likepost
-
+    url(r'^admin/', admin.site.urls),
+    url(r'^login_form$', views.login_form),
+    url(r'^logged_in_only$', views.logged_in_only)
 ]
