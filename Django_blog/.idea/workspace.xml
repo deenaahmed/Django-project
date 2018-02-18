@@ -4,30 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/Django_blog/urls.py" description="urlpatterns = [&#10;    ##url(r'^/', include('Blog/', ..." line="21" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02c098d6-ec78-4d6a-9c14-80ac2e5d2d9a" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/forms.py" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/jquery.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/jquery.min.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/static/css/bootstrap-theme.min.css" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/static/css/bootstrap.css" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/static/jquery.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/static/jquery.min.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/static/js/jquery.min.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/templates/jquery-3.1.0.min.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/Blog/templates/postpage.html" />
-      <change beforePath="$PROJECT_DIR$/Blog/migrations/0001_initial.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Blog/migrations/0002_post_image.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Blog/migrations/0003_remove_post_image.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Blog/migrations/0004_post_image.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Blog/migrations/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/Blog/models.py" afterPath="$PROJECT_DIR$/Blog/models.py" />
-      <change beforePath="$PROJECT_DIR$/Blog/urls.py" afterPath="$PROJECT_DIR$/Blog/urls.py" />
-      <change beforePath="$PROJECT_DIR$/Blog/views.py" afterPath="$PROJECT_DIR$/Blog/views.py" />
-      <change beforePath="$PROJECT_DIR$/Django_blog/settings.py" afterPath="$PROJECT_DIR$/Django_blog/settings.py" />
-      <change beforePath="$PROJECT_DIR$/Django_blog/urls.py" afterPath="$PROJECT_DIR$/Django_blog/urls.py" />
-      <change beforePath="$PROJECT_DIR$/manage.py" afterPath="$PROJECT_DIR$/manage.py" />
-      <change beforePath="$PROJECT_DIR$/../README.md" afterPath="$PROJECT_DIR$/../README.md" />
-    </list>
+    <list default="true" id="02c098d6-ec78-4d6a-9c14-80ac2e5d2d9a" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -70,7 +47,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="forms.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Blog/forms.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="176">
@@ -116,7 +93,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Blog/urls.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="176">
@@ -744,14 +721,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Blog/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="10" column="17" lean-forward="false" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Blog/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2440">
@@ -790,6 +759,14 @@
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Blog/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="10" column="17" lean-forward="false" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
