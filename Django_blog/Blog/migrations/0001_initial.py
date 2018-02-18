@@ -24,14 +24,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=150)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Category_Subscribe',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('cat', models.ForeignKey(to='Blog.Category')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('subscribe', models.ManyToManyField(related_name='sub_cat', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -55,16 +48,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=150)),
                 ('body', models.TextField()),
+                ('image', models.FileField(null=True, upload_to=b'', blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('cat', models.ForeignKey(to='Blog.Category')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Post_Tag',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('post', models.ForeignKey(to='Blog.Post')),
+                ('cat', models.ForeignKey(related_name='category_post', to='Blog.Category')),
             ],
         ),
         migrations.CreateModel(
@@ -85,9 +72,9 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name='post_tag',
+            model_name='post',
             name='tag',
-            field=models.ForeignKey(to='Blog.Tag'),
+            field=models.ManyToManyField(to='Blog.Tag'),
         ),
         migrations.AddField(
             model_name='like',

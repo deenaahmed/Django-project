@@ -1,7 +1,5 @@
 from django.db import models
-
 from django.contrib.auth.models import User
-
 
 
 class Tag(models.Model):
@@ -13,8 +11,9 @@ class Tag(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=150)
-    subscribe = models.ManyToManyField(User, related_name="sub_cat")
+    name = models.CharField(max_length=150)git 
+
+    subscribe = models.ManyToManyField(User, related_name="sub_cat",null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +29,8 @@ class Post(models.Model):
 
     image = models.FileField(null=True, blank=True)
 
-    cat = models.ForeignKey(Category)
+
+    cat = models.ForeignKey(Category, related_name="category_post")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -63,7 +63,6 @@ class BadWord(models.Model):
 
 
 
-
 class Reply(models.Model):
     user = models.ForeignKey(User)
 
@@ -81,7 +80,6 @@ class Like(models.Model):
     post = models.ForeignKey(Post)
 
     state = models.IntegerField()
-
 
 
 

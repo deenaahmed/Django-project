@@ -1,0 +1,256 @@
+
+
+{%load static%}
+<html>
+<body>
+	<style>
+	.divstyle{
+		border: 1px solid black;
+	}
+	.divstyle1{
+		border: 1px solid black;
+	}
+	.divstylereply{
+		offset:50px;
+		border: 1px solid black;
+	}
+	</style>
+	 <h1>{{post_list.title}}</h1> 
+	<img width=50px height=100px src="{%static '{{post_list.image}}' %}"> 
+	 <h4>Created by {{post_list.author}} at {{post_list.created_at}} </h4>
+	<h4>Category: {{post_list.cat}}</h4>
+	<p>{{post_list.body}}</p> 
+	<div> Related tags:
+	{% for t in tag_list %}
+			{% ifequal t.id post_list.tag %}
+			<div>{{t.name}}</div>
+			{% endifequal %}
+		{% endfor %}
+
+	</div>
+
+	<p>
+	<button id="likebutton" name="{{post_list.id}}">Like</button> <button id="dislikebutton" name="{{post_list.id}}">Dislike</button>
+	<br/>
+		<textarea id="comment" class="form-control" rows="4" placeholder="input comment!" ></textarea>
+    <button class="btn btn-raised btn-primary pull-right" value="{{post_list.id}}" id="comment-formbutton">Add comment</button>
+	
+	<div id="allcomments">
+		{% for c,cc,ccc in zipped_data %}
+	<br/>
+		<div class="divstyle comment " id="class{{c.id}}"> <!-- viewrepliesbutton kan feh hna class -->
+			{{ccc}}
+			<br/>
+			<br/>
+			{{cc}}
+			<br/>
+			<br/>
+			{{c.created_at}}
+			<br/>
+			<br/>
+			<button class="replyclass" name="{{c.id}}">Reply</button>
+			<br/>
+			<br/>
+			<button name="{{c.id}}" class="deleteclass" >Delete</button>
+			<br/>
+			<br/>
+			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
+		<div id="allreplies{{ c.id }}" class=" {{c.id}}" style="display: none;">
+		{% for r,rr,rrr in zipped_data1 %}
+			{% ifequal r.comment_id c.id %}
+			<div  class="divstylereply {{c.id}}"  >
+			{{rrr}}
+			<br/>
+			{{rr}}
+			<br/>
+			{{r.created_at}}
+			<br/>
+			</div>
+			{% endifequal %}
+		{% endfor %}
+		<div  id="replyform{{c.id}}" class="{{c.id}}" >
+            <textarea  class="{{c.id}}" name="parent_id"  id="input{{ c.id }}" ></textarea>
+           <button  class="reply-formbutton {{c.id}}" value="{{ c.id }}">Reply</button> 
+        </div>
+	</div>
+	</div>
+	{% endfor %}
+	</div>
+	
+	<script src="{% static 'js/jquery.min.js'%}"></script>
+ 
+	<script>
+	//$document.ready(function(){
+	//$("#allcomments").on("change",function(){
+	$(".deleteclass").on("click",function(){
+		comment_id=this.name
+		$.ajax({
+        url: '/double/',
+        data:{
+        	'comment_id':comment_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+            console.log(data);
+            if(data.x==1){
+            	var c = document.getElementById("class" + comment_id)
+            	document.getElementById("class" + comment_id).innerHTML=""
+            	c.parentNode.removeChild(c)
+            }
+        }
+    });
+
+	});
+
+
+	$(".viewrepliesbutton").on("click",function(){
+		if(this.innerHTML=="View replies"){
+			this.innerHTML="Hide replies"
+		var lid=this.name
+		var arr= document.getElementById("allreplies" + lid)
+		//var arr= 
+		arr.style.display="block"
+		/*for(var i=0;i<arr.length;i++)
+		{
+			arr[i].style.display="block"
+		}*/
+	}
+	else
+	{
+		this.innerHTML="View replies"
+		var lid=this.name
+		var arr= document.getElementById("allreplies" + lid)
+		//var arr= 
+		arr.style.display="none"
+		//for(var i=0;i<arr.length;i++)
+		//{
+			//arr[i].style.display="none"
+		//}
+
+	}
+
+	});
+	$(".replyclass").on("click",function(){
+		var lid=this.name
+		document.getElementById("allreplies" + lid).style.display="block"
+	});
+
+
+
+
+	/* $(document).on('submit','#comment-form',function(e){
+		e.preventDefault();
+		$.ajax({
+			type: 'POST',
+			url: 'simple/ajax',
+			data:{
+				commentbody:$('#comment').val(),
+			},
+			success:function(){
+				alert("sucess")
+			},
+		});
+	}); */
+
+	/*$("#likebutton").click(function(){
+		post_id=this.name
+		console.log(post_id)
+		$.ajax({
+			crossOrigin: true,
+        url: 'simple/ajax/deena/'+post_id
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+        }
+        });
+	});*/
+
+$(".reply-formbutton").click(function(){  
+		comment_id=this.value
+		reply_text=document.getElementById("input" + comment_id).value
+		if(reply_text!=""){
+    $.ajax({
+        url: '/triple/',
+        data:{
+        	'bodyreply':reply_text,
+        	'comment_id_reply':comment_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+            console.log(data);
+            console.log(data.username);
+            console.log(data.createdat);
+            console.log(data.idd);
+            $("#input" + comment_id).val("");
+            $("#allreplies" + comment_id).prepend('<div  class="divstylereply comment_id" style="display: block;" >' + data.username + '<br/><br/>' + reply_text + '<br/><br/>' + data.createdat + '</div>');
+        }
+    });
+}
+else
+{
+	console.log("l reply fady")
+}
+});
+
+//});
+
+
+	$("#comment-formbutton").click(function(){ 
+		comment_text=$("#comment").val()
+		post_id=$("#comment-formbutton").val()
+		if(comment_text!=""){
+    $.ajax({
+        url: '/single/',
+        data:{
+        	'body':comment_text,
+        	'post_id':post_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+            console.log(data);
+            console.log(data.username);
+            console.log(data.createdat);
+            console.log(data.idd)
+            $("#comment").val("");
+            $("#allcomments").append('<br/><div class="divstyle comment" id="class' + data.idd + '">' + data.username + '<br/><br/>' + comment_text + '<br/><br/>' + data.createdat + '<br/><br/><button class="replyclass" name="' + data.idd + '"> Reply </button><br/><br/><button name="' + data.idd + '" class="deleteclass" >Delete</button><br/><br/><button class="viewrepliesbutton" name="' + data.idd + '" > View replies </button><div id="allreplies' + data.idd + '" class="' + data.idd + '" style="display: none;"><div  id="replyform' + data.idd + '" class="' + data.idd + '" ><textarea  class="' + data.idd + '" name="parent_id"  id="input' + data.idd + '" ></textarea><button  class="reply-formbutton ' + data.idd + '" value="' + data.idd + '">Reply</button></div></div></div>');
+        }
+    });
+}
+else
+{
+	console.log("l comment fady")
+}
+});
+
+
+
+/*$('#comment-form').on('submit', function(event){
+    event.preventDefault();
+    console.log("form submitted!")  
+    create_post();
+});
+
+function create_post() {
+    $.ajax({
+        url : "/create_post/", // the endpoint
+        type : "POST", // http method
+        data : { body : $('#comment').val()}, // data sent with the post request
+
+        // handle a successful response
+        success : function(json) {
+            $('#comment').val(''); // remove the value from the input
+            console.log(json); // log the returned json to the console
+            // this causes the page to refresh and the form to POST
+            console.log("success"); 
+        },
+
+
+    });
+};*/
+//});
+	</script> 
+</body>
+</html>
