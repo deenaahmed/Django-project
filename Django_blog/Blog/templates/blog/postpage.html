@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends "blog/base.html" %}
+{% block main_block %}
+
+
+
+	<style>
+	.divstyle{
+		border: 1px solid black;
+	}
+	.divstyle1{
+		border: 1px solid black;
+	}
+	.divstylereply{
+		offset:50px;
+		border: 1px solid black;
+	}
+	</style>
+
+
+	 <h1>{{post_list.title}}</h1> 
+	<img width=50px height=100px src="{{ post_list.image.url }} ">
+	 <h4>Created by {{post_list.author}} at {{post_list.created_at}} </h4>
+	<h4>Category: {{post_list.cat}}</h4>
+	<p>{{post_list.body}}</p> 
+	<div> Related tags:
+	{% for t in tag_list %}
+			{% ifequal t.id post_list.tag %}
+			<div>{{t.name}}</div>
+			{% endifequal %}
+		{% endfor %}
+
+	</div>
+
+	<p>
+	<button id="likebutton" name="{{post_list.id}}">Like</button> <button id="dislikebutton" name="{{post_list.id}}">Dislike</button>
+	<br/>
+		<textarea id="comment" class="form-control" rows="4" placeholder="input comment!" ></textarea>
+    <button class="btn btn-raised btn-primary pull-right" value="{{post_list.id}}" id="comment-formbutton">Add comment</button>
+	
+	<div id="allcomments">
+		{% for c,cc,ccc in zipped_data %}
+	<br/>
+		<div class="divstyle comment " id="class{{c.id}}"> <!-- viewrepliesbutton kan feh hna class -->
+			{{ccc}}
+			<br/>
+			<br/>
+			{{cc}}
+			<br/>
+			<br/>
+			{{c.created_at}}
+			<br/>
+			<br/>
+			<button class="replyclass" name="{{c.id}}">Reply</button>
+			<br/>
+			<br/>
+			<button name="{{c.id}}" class="deleteclass" >Delete</button>
+			<br/>
+			<br/>
+			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
+		<div id="allreplies{{ c.id }}" class=" {{c.id}}" style="display: none;">
+		{% for r,rr,rrr in zipped_data1 %}
+			{% ifequal r.comment_id c.id %}
+			<div  class="divstylereply {{c.id}}"  >
+			{{rrr}}
+			<br/>
+			{{rr}}
+			<br/>
+			{{r.created_at}}
+			<br/>
+			</div>
+			{% endifequal %}
+		{% endfor %}
+		<div  id="replyform{{c.id}}" class="{{c.id}}" >
+            <textarea  class="{{c.id}}" name="parent_id"  id="input{{ c.id }}" ></textarea>
+           <button  class="reply-formbutton {{c.id}}" value="{{ c.id }}">Reply</button> 
+        </div>
+	</div>
+	</div>
+	{% endfor %}
+	</div>
+	
+
+</body>
+
+{% endblock %}
+</html>

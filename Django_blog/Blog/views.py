@@ -1,18 +1,13 @@
 
-from distutils.command import register
-from django.contrib.sessions import serializers
-from django.shortcuts import render, render_to_response
-from django.http import HttpResponse
-from .models import *
-from .forms import commentform,replyform
-from django.http import HttpResponseRedirect, JsonResponse
-from django.template import RequestContext
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import re
-from django.db.models import Q
-from .models import *
-from django.template import RequestContext
 
+from django.shortcuts import render, render_to_response
+
+from .forms import commentform, replyform
+from django.http import JsonResponse
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from .models import *
 
 
 def allPosts(request):
@@ -66,7 +61,6 @@ def getPostsCat(request, cat_id):
 
 
 
-
 def subscribe(request):
     cat_id = request.GET.get('catid', None)
     status = Category.subscribe.through.objects.filter(category_id=cat_id, user_id=request.user.id).exists()
@@ -80,17 +74,19 @@ def subscribe(request):
         }
 
     else:
-		Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
-		data = {
-			'x': 2
+        Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
 
-		}
+        data = {
+            'x': 2
 
-		return JsonResponse(data)
+        }
 
-# Create your views here.
+    return JsonResponse(data)
+
+
 
 def filterwithoutbadwords(comment):
+
 	commentsplitted=comment.split()
 	ob2 = BadWord.objects.all() 
 	counter=0
@@ -112,12 +108,12 @@ def filterwithoutbadwords(comment):
 		mylist2=str(mylists)
 	return mylist2
 
-def postPage(request,post_id,user_id):
+def postPage(request,post_id):
 	form = commentform()
 	form1=replyform()
 	ob = Post.objects.get(id=post_id)
-	obb = Tag.objects.all()
-	ob1 = Comment.objects.raw("select * from Blog_comment where post_id=post_id")
+	obb = []
+	ob1 = Comment.objects.filter(post_id=post_id)
 	xx=[]
 	xx1=[]
 	for x in ob1:
@@ -142,17 +138,10 @@ def postPage(request,post_id,user_id):
 	'zipped_data':zipped_data,
 	'zipped_data1':zipped_data1,
 	}
-	#if request.method=="POST":
-	#	varf=request.POST.get('body')
-	#	vare=filterwithoutbadwords(varf)
-	#	ob1= form.save(commit=False)
-	#	ob1.user_id=user_id
-	#	ob1.post_id=post_id
-	#	ob1.body=varf
-	#	ob1.save()
+
 
 	
-	return render(request, 'postpage.html', context)
+	return render(request, 'blog/postpage.html', context)
 
 def new_comment(request):
 	form = commentform()
@@ -164,7 +153,7 @@ def new_comment(request):
 	username_calculated = User.objects.get(id=ob1.user_id)
 	data = {
 	'idd' :ob1.id,
-	'username':ob1.user_id,
+	'username':request.user.username,
 	'createdat':ob1.created_at
 	}
 	
@@ -181,25 +170,14 @@ def new_reply(request):
 	ob1.save()
 	data = {
 	'idd' :ob1.id,
-	'username':ob1.user_id,
+	'username':request.user.username,
 	'createdat':ob1.created_at 
 	}
 	return JsonResponse(data)
 
 
 
-#	messages.info(request,"geeet")
-#	form= commentform()
-#	print "get new_comment"
-#	if request.method=="POST":
-#		print "method b post"
-#		form=commentform(request.POST)
-#		if form.is_valid():
-#			form.save()
-#			return JsonResponse(serializers.serialize('json',Comment.objects.all()),safe=False)
-	#return render(request, 'postpage.html')
-	
-	#return render(request, 'postpage.html',context1)
+
 
 
 
