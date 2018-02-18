@@ -21,7 +21,7 @@
 	<img width=50px height=100px src="{%static '{{post_list.image}}' %}"> 
 	 <h4>Created by {{post_list.author}} at {{post_list.created_at}} </h4>
 	<h4>Category: {{post_list.cat}}</h4>
-<<<<<<< HEAD
+
 	<p>{{post_list.body}}</p>
 	 <h3>{{ forloop.counter }}) {{ post.post_heading }}</h3>
 
@@ -44,7 +44,7 @@
 	</form>
 	<!-- {% with 0 as counterlhtml %} -->
 	{% for c,cc in zipped_data %}
-=======
+
 	<p>{{post_list.body}}</p> 
 	<div> Related tags:
 	{% for t in tag_list %}
@@ -63,7 +63,6 @@
 	
 	<div id="allcomments">
 		{% for c,cc,ccc in zipped_data %}
->>>>>>> 92a0de913ac48b24cfe0759891d2e3b132200125
 	<br/>
 		<div class="divstyle comment " id="class{{c.id}}"> <!-- viewrepliesbutton kan feh hna class -->
 			{{ccc}}
@@ -105,9 +104,8 @@
 	</div>
 	
 	<script src="{% static 'js/jquery.min.js'%}"></script>
-<<<<<<< HEAD
   <!-- <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script> -->
-=======
+
  
 	<script>
 	//$document.ready(function(){
@@ -157,15 +155,12 @@
 		//{
 			//arr[i].style.display="none"
 		//}
->>>>>>> 92a0de913ac48b24cfe0759891d2e3b132200125
 
 
-<<<<<<< HEAD
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script>
-=======
 	});
 	$(".replyclass").on("click",function(){
 		var lid=this.name
@@ -268,7 +263,6 @@ else
     console.log("form submitted!")  
     create_post();
 });
->>>>>>> 92a0de913ac48b24cfe0759891d2e3b132200125
 
     $('.likebutton').click(function(){
     var catid = $(this).attr("data-catid")
@@ -305,14 +299,12 @@ $('.dislikebutton').click(function(){
      })
 });
 
-<<<<<<< HEAD
 
 </script>
-=======
+
     });
 };*/
 //});
 	</script> 
->>>>>>> 92a0de913ac48b24cfe0759891d2e3b132200125
 </body>
 </html>
