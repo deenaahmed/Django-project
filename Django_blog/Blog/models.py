@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.contrib.auth.models import User
 
 
@@ -13,6 +12,7 @@ class Tag(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=150)
+    subscribe = models.ManyToManyField(User, related_name="sub_cat")
 
     subscribe = models.ManyToManyField(User, related_name="sub_cat",null=True, blank=True)
 
@@ -30,11 +30,14 @@ class Post(models.Model):
 
     image = models.FileField(null=True, blank=True)
 
+
     cat = models.ForeignKey(Category, related_name="category_post")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     tag = models.ManyToManyField(Tag)
+
+
 
     def __str__(self):
         return self.title
@@ -51,12 +54,14 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+
 class BadWord(models.Model):
 
     name = models.CharField(max_length=150)
 
     def __str__(self):
         return self.name
+
 
 
 class Reply(models.Model):
@@ -76,7 +81,6 @@ class Like(models.Model):
     post = models.ForeignKey(Post)
 
     state = models.IntegerField()
-
 
 
 
