@@ -6,6 +6,7 @@
 
 body {
   padding-top: 54px;
+
 }
 
 @media (min-width: 992px) {
@@ -13,3 +14,19 @@ body {
     padding-top: 56px;
   }
 }
+
+.navbar-custom {
+    background-color: #6f7e95; !important ;
+}
+
+
+.navbar-brand{
+
+ font-family: Arnoldboecklin, fantasy;
+ font-size: 1.6em;
+ font-weight: bolder;
+}
+
+
+
+

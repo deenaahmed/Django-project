@@ -1,5 +1,7 @@
 from django.contrib import admin
-from Blog.models import Category,Post,Comment,BadWord,Reply,Tag
+
+from .models import Category,Post,Comment,BadWord,Reply,Tag
+
 
 # Register your models here.
 admin.site.register(Category)
@@ -9,4 +11,8 @@ admin.site.register(Comment)
 
 admin.site.register(Tag)
 
+
 admin.site.register(Reply)
+
+
+
