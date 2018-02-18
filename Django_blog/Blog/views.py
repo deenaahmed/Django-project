@@ -36,14 +36,20 @@ def search(request):
     context = {"allPosts": found_entries}
     return render(request, "blog/home.html", context)
 
+def hello(request):
+    data = request.GET['post_id']
+    return HttpResponse(data)
 
-def likePost(request):
+def likePost(request,post_id,user_id):
     if request.method == 'GET':
-        post_id = request.GET['post_id']
-        likedpost = Post.objects.get(pk=post_id)  # getting the liked posts
-        likeObj = Like(post=likedpost)  # Creating Like Object
-        likeobj.state = 1
-        likeObj.save()  # saving it to store in database
+        post_id = post_id
+        likedpost = Post.objects.get(id=post_id)  # getting the liked posts
+        like = Like(user_id= user_id, post=likedpost)  # Creating Like Object
+        like.state = 1
+
+
+
+        like.save()  # saving it to store in database
 
         return HttpResponse("Success!")  # Sending an success response
     else:

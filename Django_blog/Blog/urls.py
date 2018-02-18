@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^home/$', views.allPosts),
     url(r'^search/$', views.search),
 
-    url(r'^likepost/$', views.likePost, name='likepost'),   # likepost view at /likepost
+    url(r'postpage/(?P<post_id>[0-9]+)/(?P<user_id>[0-9]+)/likepost$',views.likePost),
     url(r'^dislikePost/$', views.dislikePost, name='dislikepost'),   # likepost view at /likepost
     url(r'^admin/', admin.site.urls),
     url(r'^login_form$', views.login_form),

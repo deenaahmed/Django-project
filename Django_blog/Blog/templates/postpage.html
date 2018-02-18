@@ -12,13 +12,27 @@
 		border: 1px solid black;
 	}
 	</style>
+	<p id="message"></p>
+	<p>hi</p>
 	 <h1>{{post_list.title}}</h1> 
 	<img width=50px height=100px src="{%static 'image/01.png' %}"> 
 	 <h4>Created by {{post_list.author}} at {{post_list.created_at}} </h4>
 	<h4>Category: {{post_list.cat}}</h4>
-	<p>{{post_list.body}}</p> 
-	<button>Like</button> <button>Dislike</button>
-	<form id="comment-form" method="post" role="form"> 
+	<p>{{post_list.body}}</p>
+	 <h3>{{ forloop.counter }}) {{ post.post_heading }}</h3>
+
+
+    <button class="likebutton" id="Blog_like{{post.id}}" href="likepost" data-catid="{{ post.id }}">Like</button>
+
+
+     <button class="dislikebutton" id="Blog_like{{post.id}}" href="dislikepost" data-catid="{{ post.id }}">disLike</button>
+
+
+
+
+
+
+	<form id="comment-form" method="post" role="form">
 		{% csrf_token%}
 		{{form.as_p}} 
 		<textarea id="comment" name="body" class="form-control" rows="4" placeholder="input comment!"></textarea>
@@ -75,103 +89,49 @@
 	<!-- <script src="jquery-3.1.0.min.js"></script> -->
 	<script src="{% static 'js/jquery.min.js'%}"></script>
   <!-- <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script> -->
- 
-	<script>
-	//$(".divstylereply").hide();
-	$(".viewrepliesbutton").on("click",function(){
-		if(this.innerHTML=="View replies"){
-		$lid=this.name
-		//console.log($lid)
-		var arr= document.getElementsByClassName($lid)
-		for(var i=0;i<arr.length;i++)
-		{
-			arr[i].style.display="block"
-		}
-		//document.getElementById($lid).style.display="block"
-		this.innerHTML="Hide replies"
-	}
-	else
-	{
-		this.innerHTML="View replies"
-		$lid=this.name
-		//console.log($lid)
-		//document.getElementById($lid).style.display="none"
-		var arr= document.getElementsByClassName($lid)
-		for(var i=0;i<arr.length;i++)
-		{
-			arr[i].style.display="none"
-		}
-
-	}
-
-	});
-	$(".replyclass").on("click",function(){
-		$lid=this.name
-		document.getElementById($lid).style.display="block"
-	});
 
 
 
 
-	/* $(document).on('submit','#comment-form',function(e){
-		e.preventDefault();
-		$.ajax({
-			type: 'POST',
-			url: 'simple/ajax',
-			data:{
-				commentbody:$('#comment').val(),
-			},
-			success:function(){
-				alert("sucess")
-			},
-		});
-	}); */
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script>
 
-	/*$('#comment-form').submit(function(){
-		console.log("ana") 
-    $.ajax({
-        type:"POST",
-        url: 'http://127.0.0.1:8000/Blog/single/ajax',
-        data:{"comment":$("#comment").val(),
-        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-    	},
-   		dataType: 'json',
-        success:function(data){
-        	console.log("success");
-        	data = json.parse(data);
-            console.log(data);
-            $("#comment").val("");
-            $(".comment").prepend(data);   
+    $('.likebutton').click(function(){
+    var catid = $(this).attr("data-catid")
+    $.ajax(
+    {
+        type:"GET",
+        url: "likepost",
+        data:{
+                 post_id: 1
         },
-    });
-
-
-    return false;
-});*/
-/*$('#comment-form').on('submit', function(event){
-    event.preventDefault();
-    console.log("form submitted!")  
-    create_post();
+        success: function( data )
+        {
+            $( '#like'+ catid ).remove();
+            $( '#message' ).text(data);
+        }
+     })
 });
 
-function create_post() {
-    $.ajax({
-        url : "/create_post/", // the endpoint
-        type : "POST", // http method
-        data : { body : $('#comment').val()}, // data sent with the post request
-
-        // handle a successful response
-        success : function(json) {
-            $('#comment').val(''); // remove the value from the input
-            console.log(json); // log the returned json to the console
-            // this causes the page to refresh and the form to POST
-            console.log("success"); 
+$('.dislikebutton').click(function(){
+    var catid;
+    catid = $(this).attr("data-catid");
+    $.ajax(
+    {
+        type:"GET",
+        url: "/dislikepost",
+        data:{
+                 post_id: catid
         },
+        success: function( data )
+        {
+            $( '#dislike'+ catid ).remove();
+            $( '#message' ).text(data);
+        }
+     })
+});
 
 
-    });
-};*/
-
-	</script> 
+</script>
 </body>
 </html>
