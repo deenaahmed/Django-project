@@ -24,11 +24,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=150)),
-<<<<<<< HEAD
                 ('subscribe', models.ManyToManyField(related_name='sub_cat', null=True, to=settings.AUTH_USER_MODEL, blank=True)),
-=======
                 ('subscribe', models.ManyToManyField(related_name='sub_cat', to=settings.AUTH_USER_MODEL)),
->>>>>>> 92a0de913ac48b24cfe0759891d2e3b132200125
             ],
         ),
         migrations.CreateModel(
@@ -55,11 +52,8 @@ class Migration(migrations.Migration):
                 ('image', models.FileField(null=True, upload_to=b'', blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-<<<<<<< HEAD
                 ('cat', models.ForeignKey(to='Blog.Category')),
-=======
                 ('cat', models.ForeignKey(related_name='category_post', to='Blog.Category')),
->>>>>>> 92a0de913ac48b24cfe0759891d2e3b132200125
             ],
         ),
         migrations.CreateModel(

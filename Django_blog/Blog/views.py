@@ -4,7 +4,6 @@ from django.contrib.sessions import serializers
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from .models import *
-<<<<<<< HEAD
 from .forms import commentform, RegistrationForm
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
@@ -25,12 +24,10 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 
-=======
 from .forms import commentform,replyform
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
->>>>>>> 92a0de913ac48b24cfe0759891d2e3b132200125
 import re
 from django.db.models import Q
 from .models import *
@@ -59,38 +56,37 @@ def search(request):
     context = {"allPosts": found_entries}
     return render(request, "blog/home.html", context)
 
-def hello(request):
-    data = request.GET['post_id']
-    return HttpResponse(data)
-
 def likePost(request,post_id,user_id):
     if request.method == 'GET':
         post_id = post_id
         likedpost = Post.objects.get(id=post_id)  # getting the liked posts
-        like = Like(user_id= user_id, post=likedpost)  # Creating Like Object
-        like.state = 1
+        try:
+            likecheck=Like.objects.get(post=post_id,user_id=user_id)
+        except:
 
-
-
-        like.save()  # saving it to store in database
-
+            like = Like(user_id= user_id, post=likedpost)  # Creating Like Object
+            like.state = 1
+            like.save()  # saving it to store in database
         return HttpResponse("Success!")  # Sending an success response
     else:
         return HttpResponse("Request method is not a GET")
 
 
-def dislikePost(request):
+def dislikePost(request,post_id,user_id):
     counter = 0
     if request.method == 'GET':
         post_id = request.GET['post_id']
         dislikedpost = Post.objects.get(pk=post_id)  # getting the disliked posts
-        dislikeObj = Like(post=dislikedpost)  # Creating DisLike Object
-        dislikeobj.state = 0
+        try:
+            Objn = Like.objects.get(user_id=user_id, post=dislikedpost)
+        except:
+            Objn = Like(user_id=user_id, post=dislikedpost)  # Creating DisLike Object
+        objn.state = 0
         counter += 1
         if (counter > 10):
             dislikedpost.delete()
         else:
-            dislikeObj.save()  # saving it to store in database
+            Objn.save()  # saving it to store in database
             return HttpResponse("Success!")  # Sending an success response
     else:
         return HttpResponse("Request method is not a GET")
@@ -123,6 +119,10 @@ def postPage(request, post_id, user_id):
     form = commentform()
     ob = Post.objects.get(id=post_id)
     ob1 = Comment.objects.raw("select * from Blog_comment where post_id=post_id")
+    likecount=len(Like.objects.all())
+    dislikecount=len(Like.objects.all())
+
+
     xx = []
     index = 0
     for x in ob1:
@@ -139,6 +139,8 @@ def postPage(request, post_id, user_id):
                'comment_body': xx,
                'zipped_data': zipped_data,
                'reply_list': ob2,
+               'likecount':likecount,
+               'dislikecount':dislikecount
                }
     if request.method == "POST":
         # lcomment=Comment.objects.raw("select * from Blog_comment where post_id=post_id")
