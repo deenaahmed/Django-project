@@ -21,14 +21,37 @@
         <!-- Blog Entries Column -->
         <div class="col-md-8">
 
-          <h1 class="my-4">{{ user.username }}
-            <small>Secondary Text</small>
+          <h1 class="my-4">Page Heading
+            <small>Search by title:</small>
           </h1>
 
+            {% if allPosts%}
+            {%  for ps in allPosts  %}
+          <!-- Blog Post -->
+          <div class="card mb-4">
+            <img class="card-img-top" src="{{ ps.image.url }}" alt="Card image cap" width="200" height="270">
+            <div class="card-body">
+              <h2 class="card-title">{{ps.title}}</h2>
+              <p class="card-text">{{ps.body}}</p>
+              <a href="#" class="btn btn-primary">Read More &rarr;</a>
+            </div>
+            <div class="card-footer text-muted">
+              Posted on {{ps.created_at}} by
+              <a href="#">{{ps.author}}</a>
+            </div>
+          </div>
+        {%  endfor  %}
+            {% else %}
+
+            <p>No matches for you search!</p>
+           {% endif %}
 
 
-
-{%  for ps in allPosts  %}
+          <h1 class="my-4">Page Heading
+            <small>Search by tag:</small>
+          </h1>
+            {% if tags %}
+            {%  for ps in tags  %}
           <!-- Blog Post -->
           <div class="card mb-4">
             <img class="card-img-top" src="{{ ps.image.url }}" alt="Card image cap" width="200" height="270">
@@ -44,41 +67,22 @@
           </div>
 
           {%  endfor  %}
+
+          {% else %}
+
+            <p>No matches for you search!</p>
+           {% endif %}
+
           <!-- Pagination -->
-            {% if allPosts.has_other_pages %}
           <ul class="pagination justify-content-center mb-4">
-              {% if allPosts.has_previous %}
             <li class="page-item">
-              <a class="page-link" href="?page={{ allPosts.previous_page_number }}">&larr; Older</a>
+              <a class="page-link" href="#">&larr; Older</a>
             </li>
-              {% else %}
             <li class="page-item disabled">
-              <a class="page-link">&larr; Older</a>
+              <a class="page-link" href="#">Newer &rarr;</a>
             </li>
-              {% endif %}
-                {% for i in allPosts.paginator.page_range %}
-                    {% if allPosts.number == i %}
-              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                {% else %}
-                     <li><a href="?page={{ i }}">{{ i }}</a></li>
-
-                    {% endif %}
-                {% endfor %}
-
-
-
-
-              {% if allPosts.has_next %}
-            <li class="page-item">
-              <a class="page-link" href="?page={{ allPosts.next_page_number}}">Newer &rarr;</a>
-            </li>
-              {% else %}
-            <li class="page-item disabled">
-              <a class="page-link">Newer &rarr;</a>
-            </li>
-              {% endif %}
           </ul>
-            {% endif %}
+
         </div>
 
         <!-- Sidebar Widgets Column -->
@@ -106,18 +110,16 @@
             <h5 class="card-header">Categories</h5>
             <div class="card-body">
               <div class="row">
-                <div class="col-lg-12">
-                  <ul class="list-unstyled">
-                    <h2><li><a href="/home/" >All</a></li></h2>
+                <div class="col-lg-6">
+                  <ul class="list-unstyled mb-0">
+                    <li><a href="/home/" >All</a></li>
                     {%  for cat in allCat  %}
-
-                   <div class="col-lg-12" style="display : inline-block;">
 
 
                     <li>
+                      <a href="/Blog/{{cat.id}}">{{cat.name }}</a>
 
-                            <h2> <a  href="/Category/{{cat.id}}">{{cat.name }}</a> </h2>
-
+                    </li>
 
                        {% if cat.id in subcat %}
 
@@ -127,8 +129,7 @@
                       <button class="btn btn-secondary submit"  value="{{cat.id}}">Subscribe!</button>
                       {% endif %}
 
-                    </li>
-                    </div>
+
                     {% endfor %}
                   </ul>
                 </div>
@@ -152,7 +153,7 @@
 
     </div>
 
-{% endblock %}
 
+{% endblock %}
 </body>
 </html>

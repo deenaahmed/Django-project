@@ -1,9 +1,18 @@
-{%load static%}
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
 <body>
+
+{% block main_block %}
+
 	<style>
 	.divstyle{
 		border: 1px solid black;
+
 	}
 	.divstyle1{
 		border: 1px solid black;
@@ -12,91 +21,30 @@
 		border: 1px solid black;
 	}
 	</style>
-	<p id="message"></p>
-	<p>hi</p>
-	 <h1>{{post_list.title}}</h1> 
-	<img width=50px height=100px src="{%static 'image/01.png' %}"> 
-	 <h4>Created by {{post_list.author}} at {{post_list.created_at}} </h4>
-	<h4>Category: {{post_list.cat}}</h4>
-	<p>{{post_list.body}}</p>
-	 <h3>{{ forloop.counter }}) {{ post.post_heading }}</h3>
+
+<div class="card mb-4">
+           <a href="/Post/{{post_list.id}}"> <img class="card-img-top"  alt="Card image cap" width="200" height="270"></a>
+            <div class="card-body">
+              <h2 class="card-title">{{post_list.title}}</h2>
+              <p class="card-text">Category: {{post_list.cat}}</p>
+              <p class="card-text">{{post_list.body}}</p>
+            </div>
+            <div class="card-footer text-muted">
+              Posted on {{post_list.created_at}} by {{post_list.author}}
+            </div>
+		<!-- <div>Likes: {{postlike}}</div> <div>Dislikes: {{postdislike}}</div> -->
+
+	</div>
+
+<p>{{likecount}}</p>
+	<button class='likebutton' id='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}' style="background-color: white;">Like</button>
+<p>{{dislikecount}}</p>
+<button class='dislikebutton' id='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: blue;" data-catid='{{post_list.id}}'>Dislike</button>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
 
 
-    <button class="likebutton" id="Blog_like{{post.id}}" href="likepost" data-catid="{{ post.id }}">Like</button>
-
-
-     <button class="dislikebutton" id="Blog_like{{post.id}}" href="dislikepost" data-catid="{{ post.id }}">disLike</button>
-
-
-
-
-
-
-	<form id="comment-form" method="post" role="form">
-		{% csrf_token%}
-		{{form.as_p}} 
-		<textarea id="comment" name="body" class="form-control" rows="4" placeholder="input comment!"></textarea>
-    <button type="submit" class="btn btn-raised btn-primary pull-right">Add comment</button>
-	</form>
-	<!-- {% with 0 as counterlhtml %} -->
-	{% for c,cc in zipped_data %}
-	<br/>
-		<div class="divstyle comment">
-			{{c.user_id}}
-			<br/>
-			<br/>
-			<!-- {{comment_body.counterlhtml}} -->
-			<!-- {% for cc in comment_body %}
-			{{cc}}
-			{% endfor %}  {{c.body}}  -->
-			{{cc}}
-			 
-			<br/>
-			<br/>
-			{{c.created_at}}
-			<br/>
-			<br/>
-			<button class="replyclass" name="{{c.id}}">Reply</button>
-			<br/>
-			<br/>
-			<a href="deletecomment/comment_id={{c.id}}">Delete</a>
-			<br/>
-			<br/>
-			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
-			
-		</div>
-		{% for r in reply_list%}
-			{% ifequal r.comment_id c.id %}
-			<div  class="divstylereply {{c.id}}" style="display: none;" >
-			{{r.username}}
-			<br/>
-			{{r.body}}
-			<br/>
-			{{r.created_at}}
-			<br/>
-			</div>
-			{% endifequal %}
-		{% endfor %}
-		<form action="." id="{{c.id}}" method="post" style="display: none;">
-            {% csrf_token %}
-            {{form.as_p}} 
-            <!-- Hidden input for parent comment.id -->
-            <textarea  name="parent_id" value="{{ comment.id }}" ></textarea>
-           <button  type="submit">Reply</button> 
-        </form>
-	{% endfor %}
-	<!-- {% endwith %} -->
-	<!-- <script src="jquery-3.1.0.min.js"></script> -->
-	<script src="{% static 'js/jquery.min.js'%}"></script>
-  <!-- <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script> -->
-
-
-
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script>
-
-    $('.likebutton').click(function(){
+  $('.likebutton').click(function(){
     var catid = $(this).attr("data-catid")
     $.ajax(
     {
@@ -111,7 +59,15 @@
             $( '#message' ).text(data);
         }
      })
+      $('.dislikebutton').attr('disabled', 'disabled');
+      $('.likebutton').html('unlike');
 });
+
+
+
+
+
+
 
 $('.dislikebutton').click(function(){
     var catid;
@@ -119,9 +75,9 @@ $('.dislikebutton').click(function(){
     $.ajax(
     {
         type:"GET",
-        url: "/dislikepost",
+        url: "dislikepost",
         data:{
-                 post_id: catid
+                 post_id: 1
         },
         success: function( data )
         {
@@ -129,9 +85,51 @@ $('.dislikebutton').click(function(){
             $( '#message' ).text(data);
         }
      })
+       $('.likebutton').attr('disabled', 'disabled');
+       $('.dislikebutton').html('like');
+
 });
 
 
+
+
+
+
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
 </body>
+
+
 </html>

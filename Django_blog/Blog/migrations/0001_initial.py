@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=150)),
                 ('subscribe', models.ManyToManyField(related_name='sub_cat', null=True, to=settings.AUTH_USER_MODEL, blank=True)),
+                ('subscribe', models.ManyToManyField(related_name='sub_cat', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -52,6 +53,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('cat', models.ForeignKey(to='Blog.Category')),
+                ('cat', models.ForeignKey(related_name='category_post', to='Blog.Category')),
             ],
         ),
         migrations.CreateModel(
