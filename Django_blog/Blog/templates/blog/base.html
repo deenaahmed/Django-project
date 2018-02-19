@@ -52,6 +52,127 @@ $(".submit").click(function () {
 
 
     });
+
+
+    $(".deleteclass").on("click",function(){
+		comment_id=this.name
+		$.ajax({
+        url: '/double/',
+        data:{
+        	'comment_id':comment_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+            console.log(data);
+            if(data.x==1){
+            	var c = document.getElementById("class" + comment_id)
+            	document.getElementById("class" + comment_id).innerHTML=""
+            	c.parentNode.removeChild(c)
+            }
+        }
+    });
+
+	});
+
+
+
+	$(".viewrepliesbutton").on("click",function(){
+		if(this.innerHTML=="View replies"){
+			this.innerHTML="Hide replies"
+		var lid=this.name
+		var arr= document.getElementById("allreplies" + lid)
+
+		arr.style.display="block"
+
+	}
+	else
+	{
+		this.innerHTML="View replies"
+		var lid=this.name
+		var arr= document.getElementById("allreplies" + lid)
+		//var arr=
+		arr.style.display="none"
+		//for(var i=0;i<arr.length;i++)
+		//{
+			//arr[i].style.display="none"
+		//}
+
+	}
+
+	});
+
+
+
+	$(".replyclass").on("click",function(){
+		var lid=this.name
+		document.getElementById("allreplies" + lid).style.display="block"
+	});
+
+
+
+	$(".reply-formbutton").click(function(){
+		comment_id=this.value
+		reply_text=document.getElementById("input" + comment_id).value
+		if(reply_text!=""){
+    $.ajax({
+        url: '/triple/',
+        data:{
+        	'bodyreply':reply_text,
+        	'comment_id_reply':comment_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+            console.log(data);
+            console.log(data.username);
+            console.log(data.createdat);
+            console.log(data.idd);
+            $("#input" + comment_id).val("");
+            $("#allreplies" + comment_id).prepend('<div  class="divstylereply comment_id" style="display: block;" >' + data.username + '<br/><br/>' + reply_text + '<br/><br/>' + data.createdat + '</div>');
+        }
+    });
+}
+else
+{
+	console.log("l reply fady")
+}
+});
+
+
+
+
+
+
+$("#comment-formbutton").click(function(){
+		comment_text=$("#comment").val()
+		post_id=$("#comment-formbutton").val()
+		if(comment_text!=""){
+    $.ajax({
+        url: '/single/',
+        data:{
+        	'body':comment_text,
+        	'post_id':post_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+        	console.log("success");
+            console.log(data);
+            console.log(data.username);
+            console.log(data.createdat);
+            console.log(data.idd)
+            $("#comment").val("");
+            $("#allcomments").append('<br/><div class="divstyle comment" id="class' + data.idd + '">' + data.username + '<br/><br/>' + comment_text + '<br/><br/>' + data.createdat + '<br/><br/><button class="replyclass" name="' + data.idd + '"> Reply </button><br/><br/><button name="' + data.idd + '" class="deleteclass" >Delete</button><br/><br/><button class="viewrepliesbutton" name="' + data.idd + '" > View replies </button><div id="allreplies' + data.idd + '" class="' + data.idd + '" style="display: none;"><div  id="replyform' + data.idd + '" class="' + data.idd + '" ><textarea  class="' + data.idd + '" name="parent_id"  id="input' + data.idd + '" ></textarea><button  class="reply-formbutton ' + data.idd + '" value="' + data.idd + '">Reply</button></div></div></div>');
+        }
+    });
+}
+else
+{
+	console.log("l comment fady")
+}
+});
+
+
 </script>
 {% endblock %}
 
