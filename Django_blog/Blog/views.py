@@ -6,7 +6,11 @@ from .forms import commentform, replyform
 from django.http import JsonResponse
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+<<<<<<< HEAD
 from django.core.mail import send_mail
+=======
+
+>>>>>>> 526d285baaee747cd46a88bff2691d9450be0d0d
 from .models import *
 
 
@@ -94,6 +98,7 @@ def subscribe(request):
 
     else:
         Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
+
         cat=Category.objects.get(id=cat_id)
         send_mail('Category Subscription', ' hello '+request.user.username+', you have subscribed successfully in '+cat.name+' welcome aboard', 'myblog@blog.com', [request.user.email])
 
@@ -101,6 +106,9 @@ def subscribe(request):
             'x': 2
 
         }
+
+
+
 
     return JsonResponse(data)
 
