@@ -169,9 +169,7 @@ def postPage(request,post_id):
 	return render(request, 'blog/postpage.html', context)
 
 
-@register.filter(name='formunix')
-def formunix(value):
-	return datetime.datetime.formtimestamp(int(value))
+
 
 
 def new_comment(request):
@@ -181,7 +179,7 @@ def new_comment(request):
 	ob1.user_id=1
 	ob1.body=request.GET.get('body',None)
 	ob1.save()
-	ob1.created_at=formunix(ob1.created_at)
+	#ob1.created_at=formunix(ob1.created_at)
 	body =filterwithoutbadwords(ob1.body)
 	data = {
 	'idd' :ob1.id,
@@ -199,7 +197,7 @@ def new_reply(request):
 	ob1.user_id=1
 	ob1.body=request.GET.get('bodyreply',None)
 	ob1.save()
-	ob1.created_at=formunix(ob1.created_at)
+	#ob1.created_at=formunix(ob1.created_at)
 	body =filterwithoutbadwords(ob1.body)
 	data = {
 	'idd' :ob1.id,
