@@ -1,10 +1,10 @@
 
 from distutils.command import register
 from django.contrib.sessions import serializers
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, redirect
 from django.http import HttpResponse
 from .models import *
-from .forms import commentform,replyform
+from .forms import commentform,replyform, UserLogin,RegistrationForm
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -12,8 +12,7 @@ import re
 from django.db.models import Q
 from .models import *
 from django.template import RequestContext
-
-
+from django.contrib.auth import authenticate,get_user_model,login,logout
 
 def allPosts(request):
     all_posts = Post.objects.all()
@@ -222,9 +221,52 @@ def comment_delete(request):
 
 
 def sub(request):
-
     catsub=Category.objects.filter(subscribe=request.user.id)
     cat_sub=[]
     for i in catsub:
         cat_sub.append(i.id)
     return cat_sub
+
+
+User = get_user_model()
+def login(request):
+	form = UserLogin(request.POST or None)
+	if form.is_valid():
+		username = form.cleaned_data.get("username")
+		password = form.cleaned_data.get("password")
+	return render(request, "blog/login_page.html", {"form" : form})
+
+
+def register(request):
+	if request.method == "POST":
+		form = RegistrationForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect("/home")
+	else:
+		form = RegistrationForm()
+
+	return render(request, "blog/register.html", {"form": form})
+
+
+def logout(request):
+	return render(request, "logout_page.html", {})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
