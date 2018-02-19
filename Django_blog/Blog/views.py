@@ -6,7 +6,7 @@ from .forms import *
 from django.http import JsonResponse
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.core.mail import send_mail
 from .models import *
 import re
 
@@ -22,8 +22,9 @@ def allPosts(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     all_cat = getCat()
+    all_tag = getTag()
     sub_cat = sub(request)
-    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat}
+    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat, "alltag":all_tag}
     return render(request, "blog/home.html", context)
 
 
@@ -41,8 +42,20 @@ def search(request):
         found_entries = None
     all_cat = getCat()
     sub_cat = sub(request)
-    context = {"allPosts": found_entries, "tags": byTag, "allCat": all_cat, "subcat": sub_cat}
+    all_tag = getTag()
+    context = {"allPosts": found_entries, "tags": byTag, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/search.html", context)
+
+def getPostsTag(request,tag_id):
+    tag = Tag.objects.get(id=tag_id)
+    posts = Post.objects.filter(tag=tag.id).order_by('created_at')
+    all_cat = getCat()
+    sub_cat = sub(request)
+    all_tag = getTag()
+    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
+    return render(request, "blog/home.html", context)
+
+
 
 
 
@@ -52,12 +65,18 @@ def getCat():
     cat=Category.objects.all()
     return cat
 
+def getTag():
+
+    tag=Tag.objects.all()
+    return tag
+
 
 def getPostsCat(request, cat_id):
     all_posts = Post.objects.filter(cat_id= cat_id).order_by('created_at')
     all_cat = getCat()
     sub_cat = sub(request)
-    context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat}
+    all_tag = getTag()
+    context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat, "alltag":all_tag}
     return render(request, "blog/home.html", context)
 
 
@@ -75,9 +94,12 @@ def subscribe(request):
 
     else:
         Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
+        cat=Category.objects.get(id=cat_id)
+        send_mail('Category Subscription', ' hello '+request.user.username+', you have subscribed successfully in '+cat.name+' welcome aboard', 'myblog@blog.com', [request.user.email])
         data = {
             'x': 2
         }
+
     return JsonResponse(data)
 
 def filterwithoutbadwords(comment):
@@ -237,6 +259,4 @@ def sub(request):
     for i in catsub:
         cat_sub.append(i.id)
     return cat_sub
-
-
 
