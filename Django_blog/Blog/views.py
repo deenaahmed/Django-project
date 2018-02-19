@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 from distutils.command import register
 from django.contrib.sessions import serializers
 from django.core.mail import send_mail
@@ -8,12 +9,24 @@ from .models import *
 from .forms import commentform,replyform, UserLogin,RegistrationForm
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template import RequestContext
+=======
+
+from django.shortcuts import render, render_to_response
+
+from .forms import *
+from django.http import JsonResponse
+
+>>>>>>> master
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import re
-from django.db.models import Q
+from django.core.mail import send_mail
 from .models import *
+<<<<<<< HEAD
 from django.template import RequestContext
 from django.contrib.auth import authenticate,get_user_model,login,logout
+=======
+import re
+
+>>>>>>> master
 
 def allPosts(request):
     all_posts = Post.objects.all()
@@ -28,7 +41,11 @@ def allPosts(request):
     all_cat = getCat()
     all_tag = getTag()
     sub_cat = sub(request)
+<<<<<<< HEAD
     context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
+=======
+    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat, "alltag":all_tag}
+>>>>>>> master
     return render(request, "blog/home.html", context)
 
 
@@ -47,6 +64,10 @@ def search(request):
     all_cat = getCat()
     all_tag = getTag()
     sub_cat = sub(request)
+<<<<<<< HEAD
+=======
+    all_tag = getTag()
+>>>>>>> master
     context = {"allPosts": found_entries, "tags": byTag, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/search.html", context)
 
@@ -58,6 +79,13 @@ def getPostsTag(request,tag_id):
     all_tag = getTag()
     context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/home.html", context)
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> master
 
 
 def getCat():
@@ -76,9 +104,13 @@ def getPostsCat(request, cat_id):
     all_cat = getCat()
     all_tag = getTag()
     sub_cat = sub(request)
+<<<<<<< HEAD
     context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
+=======
+    all_tag = getTag()
+    context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat, "alltag":all_tag}
+>>>>>>> master
     return render(request, "blog/home.html", context)
-
 
 
 
@@ -91,10 +123,10 @@ def subscribe(request):
         Category.subscribe.through.objects.filter(category_id=cat_id, user_id=request.user.id).delete()
         data = {
             'x': 1
-
         }
 
     else:
+<<<<<<< HEAD
 		Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
 		cat = Category.objects.get(id=cat_id)
 		send_mail('Category Subscription',
@@ -106,10 +138,19 @@ def subscribe(request):
 		}
 
 		return JsonResponse(data)
+=======
+        Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
+        cat=Category.objects.get(id=cat_id)
+        send_mail('Category Subscription', ' hello '+request.user.username+', you have subscribed successfully in '+cat.name+' welcome aboard', 'myblog@blog.com', [request.user.email])
+        data = {
+            'x': 2
+        }
+>>>>>>> master
 
-# Create your views here.
+    return JsonResponse(data)
 
 def filterwithoutbadwords(comment):
+
 	commentsplitted=comment.split()
 	ob2 = BadWord.objects.all() 
 	counter=0
@@ -127,16 +168,24 @@ def filterwithoutbadwords(comment):
 		counter+=1
 	mylists=""
 	for uu in commentsplitted:
-		mylists = mylists + uu
+		mylists = mylists + uu + " "
 		mylist2=str(mylists)
 	return mylist2
 
-def postPage(request,post_id,user_id):
+
+def postPage(request,post_id):
 	form = commentform()
 	form1=replyform()
+	user__id=1
+	postlike = Like.objects.filter(post_id= post_id,state=1 ).count()
+	postdislike = Like.objects.filter(post_id= post_id,state=0).count()
+
+	obblike = Like.objects.filter(post_id= post_id,user_id=user__id,state=1).exists()
+	obbdislike = Like.objects.filter(post_id= post_id,user_id=user__id,state=0).exists()
+
 	ob = Post.objects.get(id=post_id)
-	obb = Tag.objects.all()
-	ob1 = Comment.objects.raw("select * from Blog_comment where post_id=post_id")
+	obb = Tag.objects.raw('select * from Blog_tag where id in(select tag_id from Blog_post_tag where post_id=' + post_id + ')')
+	ob1 = Comment.objects.filter(post_id=post_id)
 	xx=[]
 	xx1=[]
 	for x in ob1:
@@ -156,22 +205,24 @@ def postPage(request,post_id,user_id):
 	zipped_data1= zip(ob2,xx1,xx11)
 	context = {'post_list':ob,
 	'tag_list':obb,
-	'comment_list':ob1,
-	'comment_body':xx,
 	'zipped_data':zipped_data,
 	'zipped_data1':zipped_data1,
+	'obblike':obblike,
+	'obbdislike':obbdislike,
+	'postlike':postlike,
+	'postdislike':postdislike
 	}
-	#if request.method=="POST":
-	#	varf=request.POST.get('body')
-	#	vare=filterwithoutbadwords(varf)
-	#	ob1= form.save(commit=False)
-	#	ob1.user_id=user_id
-	#	ob1.post_id=post_id
-	#	ob1.body=varf
-	#	ob1.save()
 
+<<<<<<< HEAD
 
 	return render(request, 'postpage.html', context)
+=======
+	return render(request, 'blog/postpage.html', context)
+
+
+
+
+>>>>>>> master
 
 def new_comment(request):
 	form = commentform()
@@ -180,10 +231,12 @@ def new_comment(request):
 	ob1.user_id=1
 	ob1.body=request.GET.get('body',None)
 	ob1.save()
-	username_calculated = User.objects.get(id=ob1.user_id)
+	#ob1.created_at=formunix(ob1.created_at)
+	body =filterwithoutbadwords(ob1.body)
 	data = {
 	'idd' :ob1.id,
-	'username':ob1.user_id,
+	'bodyy' :body,
+	'username':request.user.username,
 	'createdat':ob1.created_at
 	}
 	
@@ -193,32 +246,49 @@ def new_reply(request):
 	form1 = replyform()
 	ob1= form1.save(commit=False)
 	ob1.comment_id=request.GET.get('comment_id_reply',None)
-	#print ob1.comment_id
 	ob1.user_id=1
 	ob1.body=request.GET.get('bodyreply',None)
-	#print ob1.body
 	ob1.save()
+	#ob1.created_at=formunix(ob1.created_at)
+	body =filterwithoutbadwords(ob1.body)
 	data = {
 	'idd' :ob1.id,
-	'username':ob1.user_id,
+	'bodyy' :body,
+	'username':request.user.username,
 	'createdat':ob1.created_at 
+	}
+	return JsonResponse(data)
+
+def new_like(request):
+	varm= Like.objects.raw('select * from Blog_like where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ')')
+	if(varm): # lw mwgod l record mn l awl update l value
+		ob5 = Like.objects.get(id=varm.id)
+		ob5.state= request.GET.get('state',None)
+		ob5.save()
+	else: # lw msh mwgod create record gded 
+		form2 = likeform()
+		ob1= form2.save(commit=False)
+		ob1.state=request.GET.get('state',None)
+		ob1.user_id=1
+		ob1.post_id=request.GET.get('post_id',None)
+		ob1.save()
+	obblike = Like.objects.raw('select count(*) where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ' and state=1) ')
+	obbdislike = Like.objects.raw('select count(*) where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ' and state=0) ')
+	objectdeleted=0
+	if(obbdislike>2):
+		posttobedeleted=Post.objects.get(id=post_id)
+		posttobedeleted.delete()
+		objectdeleted=1
+	data = {
+	'numoflikes' : obblike,
+	'numofdislikes' : obbdislike,
+	'objectdeleted' : objectdeleted
 	}
 	return JsonResponse(data)
 
 
 
-#	messages.info(request,"geeet")
-#	form= commentform()
-#	print "get new_comment"
-#	if request.method=="POST":
-#		print "method b post"
-#		form=commentform(request.POST)
-#		if form.is_valid():
-#			form.save()
-#			return JsonResponse(serializers.serialize('json',Comment.objects.all()),safe=False)
-	#return render(request, 'postpage.html')
-	
-	#return render(request, 'postpage.html',context1)
+
 
 
 
@@ -232,14 +302,6 @@ def comment_delete(request):
 	
 	return JsonResponse(data)
 
-
-
-
-
-
-
-
-
 def sub(request):
     catsub=Category.objects.filter(subscribe=request.user.id)
     cat_sub=[]
@@ -247,6 +309,7 @@ def sub(request):
         cat_sub.append(i.id)
     return cat_sub
 
+<<<<<<< HEAD
 
 User = get_user_model()
 def login(request):
@@ -290,3 +353,5 @@ def logout(request):
 
 
 
+=======
+>>>>>>> master
