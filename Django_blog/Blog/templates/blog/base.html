@@ -14,11 +14,37 @@
 {% include "blog/header.html" %}
 
 {% block main_block %}
-
 {% endblock %}
 {% include "blog/footer.html" %}
 {% block javascript %}
 <script>
+
+/*$('.likebutton').click(function () {
+    if($('.likebutton')[0].style.backgroud-color=="blue" )   {
+        $(this)[0].style.backgroudColor="white"
+        $('.dislikebutton')[0].style.backgroudColor="blue"
+    }
+    else{
+        console.log("kan white ")
+        $(this)[0].style.backgroudColor="blue"
+        $('.dislikebutton')[0].style.backgroudColor="white"
+    }
+
+});
+$('.dislikebutton').click(function () {
+    if($('.dislikebutton').style.backgroud-color=="blue" )   {
+        $('.dislikebutton').style.backgroudColor="white"
+        $('.likebutton').style.backgroud-color="blue"
+    }
+    else{
+       $('.likebutton').style.backgroud-color="white"
+       $('.dislikebutton').style.backgroud-color="blue" 
+    }
+
+});*/
+
+
+
 $(".submit").click(function () {
       console.log( $(this).attr('value') );
       cat_id=$(this).attr('value');
@@ -46,12 +72,165 @@ $(".submit").click(function () {
           }
         }
       });
+    });
 
 
 
+    $(".deleteclass").on("click",function(){
+        comment_id=this.name
+        $.ajax({
+        url: '/double/',
+        data:{
+            'comment_id':comment_id
+        },
+        dataType: 'json',
+        success:function(data){
+            console.log("success");
+            console.log(data);
+            if(data.x==1){
+                var c = document.getElementById("class" + comment_id)
+                document.getElementById("class" + comment_id).innerHTML=""
+                c.parentNode.removeChild(c)
+            }
+        }
+    });
+	});
 
+
+
+	$(".viewrepliesbutton").on("click",function(){
+		if(this.innerHTML=="View replies"){
+			this.innerHTML="Hide replies"
+		var lid=this.name
+		var arr= document.getElementById("allreplies" + lid)
+		arr.style.display="block"
+
+    	}
+    	else
+    	{
+    		this.innerHTML="View replies"
+    		var lid=this.name
+    		var arr= document.getElementById("allreplies" + lid)
+    		arr.style.display="none"
+    	}
+	});
+
+	$(".replyclass").on("click",function(){
+		var lid=this.name
+		document.getElementById("allreplies" + lid).style.display="block"
+	});
+
+	$(".reply-formbutton").click(function(){
+		comment_id=this.value
+		reply_text=document.getElementById("input" + comment_id).value
+		if(reply_text!=""){
+    $.ajax({
+        url: '/triple/',
+        data:{
+        	'bodyreply':reply_text,
+        	'comment_id_reply':comment_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+            $("#input" + comment_id).val("");
+            $("#allreplies" + comment_id).prepend('<div  class="divstylereply comment_id" style="display: block;" >' + data.username + '<br/>' + data.bodyy + '<br/>' + data.createdat + '</div>');
+        }
+    });
+}
+else
+{
+	console.log("l reply fady")
+}
+});
+
+$("#comment-formbutton").click(function(){
+		comment_text=$("#comment").val()
+		post_id=$("#comment-formbutton").val()
+		if(comment_text!=""){
+    $.ajax({
+        url: '/single/',
+        data:{
+        	'body':comment_text,
+        	'post_id':post_id
+    	},
+   		dataType: 'json',
+        success:function(data){
+            $("#comment").val("");
+            $("#allcomments").append('<br/><div class="divstyle comment" id="class' + data.idd + '">' + data.username + '<br/>' + data.bodyy + '<br/>' + data.createdat + '<br/><br/><button class="replyclass" name="' + data.idd + '"> Reply </button><button name="' + data.idd + '" class="deleteclass" >Delete</button><button class="viewrepliesbutton" name="' + data.idd + '" > View replies </button><div id="allreplies' + data.idd + '" class="' + data.idd + '" style="display: none;"><div  id="replyform' + data.idd + '" class="' + data.idd + '" ><textarea  class="' + data.idd + '" name="parent_id"  id="input' + data.idd + '" ></textarea><button  class="reply-formbutton ' + data.idd + '" value="' + data.idd + '">Reply</button></div></div></div>');
+            $(".deleteclass").on("click",function(){
+        comment_id=this.name
+        $.ajax({
+        url: '/double/',
+        data:{
+            'comment_id':comment_id
+        },
+        dataType: 'json',
+        success:function(data){
+            if(data.x==1){
+                var c = document.getElementById("class" + comment_id)
+                document.getElementById("class" + comment_id).innerHTML=""
+                c.parentNode.removeChild(c)
+            }
+        }
+    });
+    });
+    $(".viewrepliesbutton").on("click",function(){
+        if(this.innerHTML=="View replies"){
+            this.innerHTML="Hide replies"
+        var lid=this.name
+        var arr= document.getElementById("allreplies" + lid)
+        arr.style.display="block"
+
+    }
+    else
+    {
+        this.innerHTML="View replies"
+        var lid=this.name
+        var arr= document.getElementById("allreplies" + lid)
+        arr.style.display="none"
+    }
 
     });
+
+    $(".replyclass").on("click",function(){
+        var lid=this.name
+        document.getElementById("allreplies" + lid).style.display="block"
+    });
+
+
+
+    $(".reply-formbutton").click(function(){
+        comment_id=this.value
+        reply_text=document.getElementById("input" + comment_id).value
+        if(reply_text!=""){
+    $.ajax({
+        url: '/triple/',
+        data:{
+            'bodyreply':reply_text,
+            'comment_id_reply':comment_id
+        },
+        dataType: 'json',
+        success:function(data){
+            $("#input" + comment_id).val("");
+            $("#allreplies" + comment_id).prepend('<div  class="divstylereply comment_id" style="display: block;" >' + data.username + '<br/>' + data.bodyy + '<br/>' + data.createdat + '</div>');
+        }
+    });
+}
+else
+{
+    console.log("l reply fady")
+}
+});
+        }
+    });
+}
+else
+{
+	console.log("l comment fady")
+}
+});
+
+
 </script>
 {% endblock %}
 

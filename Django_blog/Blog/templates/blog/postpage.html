@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends "blog/base.html" %}
+{% block main_block %}
+
+	<style>
+	.divstyle{
+		border: 1px solid black;
+		
+	}
+	.divstyle1{
+		border: 1px solid black;
+	}
+	.divstylereply{
+		border: 1px solid black;
+	}
+	</style>
+
+<div class="card mb-4">
+           <a href="/Post/{{post_list.id}}"> <img class="card-img-top" src="{{ post_list.image.url }}" alt="Card image cap" width="200" height="270"></a>
+            <div class="card-body">
+              <h2 class="card-title">{{post_list.title}}</h2>
+              <p class="card-text">Category: {{post_list.cat}}</p>
+              <p class="card-text">{{post_list.body}}</p>
+            </div>
+            <div class="card-footer text-muted">
+              Posted on {{post_list.created_at}} by {{post_list.author}}
+            </div>
+            <div> Related tags:
+			{% for t in tag_list %}
+			<div>{{t.name}}</div>
+		{% endfor %}
+		 <div>Likes: {{postlike}}</div> <div>Dislikes: {{postdislike}}</div> 
+
+	</div>
+          </div>
+	{% if user.is_authenticated %}
+	<p>
+	{% if obblike %}	
+	<button class='likebutton' id='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}' style="background-color: blue;">Like</button>
+	 <button class='dislikebutton' id='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: white;" data-catid='{{post_list.id}}'>Dislike</button>
+	 {% endif %}
+	 {% if obbdislike %}	
+	<button class='likebutton' id='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}' style="background-color: white;">Like</button>
+	 <button class='dislikebutton' id='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: blue;" data-catid='{{post_list.id}}'>Dislike</button>
+	 {% endif %}
+	<br/>
+		<textarea id="comment" class="form-control" rows="4" placeholder="input comment!" ></textarea>
+    <button class="btn btn-raised btn-primary pull-right" value="{{post_list.id}}" id="comment-formbutton">Add comment</button>
+    {% endif %}
+	<div id="allcomments">
+		{% for c,cc,ccc in zipped_data %}
+	<br/>
+		<div class="divstyle comment " id="class{{c.id}}"> <!-- viewrepliesbutton kan feh hna class -->
+			{{ccc}}
+			<br/>
+			{{cc}}
+			<br/>
+			{{c.created_at}}
+			<br/>
+			<br/>
+			{% if user.is_authenticated %}
+			<button class="replyclass" name="{{c.id}}">Reply</button>
+			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
+			{% if user.is_superuser %}
+			 <button name="{{c.id}}" class="deleteclass" >Delete</button> 
+			{% endif %}
+            {% else %}
+			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
+			{% endif %}
+		<div id="allreplies{{ c.id }}" class=" {{c.id}}" style="display: none;">
+		{% for r,rr,rrr in zipped_data1 %}
+			{% ifequal r.comment_id c.id %}
+			<div  class="divstylereply {{c.id}}"  >
+			{{rrr}}
+			<br/>
+			{{rr}}
+			<br/>
+			{{r.created_at}}
+			<br/>
+			</div>
+			{% endifequal %}
+		{% endfor %}
+		{% if user.is_authenticated %}
+		<div  id="replyform{{c.id}}" class="{{c.id}}" >
+            <textarea  class="{{c.id}}" name="parent_id"  id="input{{ c.id }}" ></textarea>
+           <button  class="reply-formbutton {{c.id}}" value="{{ c.id }}">Reply</button> 
+        </div>
+        {% endif %}
+	</div>
+	</div>
+	{% endfor %}
+	</div>
+	{% include "blog/sidebar.html" %}
+</body>
+
+{% endblock %}
+</html>
