@@ -2,16 +2,13 @@
 
 from django.shortcuts import render, render_to_response
 
-from .forms import commentform, replyform
+from .forms import *
 from django.http import JsonResponse
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-<<<<<<< HEAD
 from django.core.mail import send_mail
-=======
-
->>>>>>> 526d285baaee747cd46a88bff2691d9450be0d0d
 from .models import *
+import re
 
 
 def allPosts(request):
@@ -93,26 +90,17 @@ def subscribe(request):
         Category.subscribe.through.objects.filter(category_id=cat_id, user_id=request.user.id).delete()
         data = {
             'x': 1
-
         }
 
     else:
         Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
-
         cat=Category.objects.get(id=cat_id)
         send_mail('Category Subscription', ' hello '+request.user.username+', you have subscribed successfully in '+cat.name+' welcome aboard', 'myblog@blog.com', [request.user.email])
-
         data = {
             'x': 2
-
         }
 
-
-
-
     return JsonResponse(data)
-
-
 
 def filterwithoutbadwords(comment):
 
@@ -133,15 +121,23 @@ def filterwithoutbadwords(comment):
 		counter+=1
 	mylists=""
 	for uu in commentsplitted:
-		mylists = mylists + uu
+		mylists = mylists + uu + " "
 		mylist2=str(mylists)
 	return mylist2
+
 
 def postPage(request,post_id):
 	form = commentform()
 	form1=replyform()
+	user__id=1
+	postlike = Like.objects.filter(post_id= post_id,state=1 ).count()
+	postdislike = Like.objects.filter(post_id= post_id,state=0).count()
+
+	obblike = Like.objects.filter(post_id= post_id,user_id=user__id,state=1).exists()
+	obbdislike = Like.objects.filter(post_id= post_id,user_id=user__id,state=0).exists()
+
 	ob = Post.objects.get(id=post_id)
-	obb = []
+	obb = Tag.objects.raw('select * from Blog_tag where id in(select tag_id from Blog_post_tag where post_id=' + post_id + ')')
 	ob1 = Comment.objects.filter(post_id=post_id)
 	xx=[]
 	xx1=[]
@@ -162,15 +158,19 @@ def postPage(request,post_id):
 	zipped_data1= zip(ob2,xx1,xx11)
 	context = {'post_list':ob,
 	'tag_list':obb,
-	'comment_list':ob1,
-	'comment_body':xx,
 	'zipped_data':zipped_data,
 	'zipped_data1':zipped_data1,
+	'obblike':obblike,
+	'obbdislike':obbdislike,
+	'postlike':postlike,
+	'postdislike':postdislike
 	}
 
-
-	
 	return render(request, 'blog/postpage.html', context)
+
+
+
+
 
 def new_comment(request):
 	form = commentform()
@@ -179,9 +179,11 @@ def new_comment(request):
 	ob1.user_id=1
 	ob1.body=request.GET.get('body',None)
 	ob1.save()
-	username_calculated = User.objects.get(id=ob1.user_id)
+	#ob1.created_at=formunix(ob1.created_at)
+	body =filterwithoutbadwords(ob1.body)
 	data = {
 	'idd' :ob1.id,
+	'bodyy' :body,
 	'username':request.user.username,
 	'createdat':ob1.created_at
 	}
@@ -192,15 +194,43 @@ def new_reply(request):
 	form1 = replyform()
 	ob1= form1.save(commit=False)
 	ob1.comment_id=request.GET.get('comment_id_reply',None)
-	#print ob1.comment_id
 	ob1.user_id=1
 	ob1.body=request.GET.get('bodyreply',None)
-	#print ob1.body
 	ob1.save()
+	#ob1.created_at=formunix(ob1.created_at)
+	body =filterwithoutbadwords(ob1.body)
 	data = {
 	'idd' :ob1.id,
+	'bodyy' :body,
 	'username':request.user.username,
 	'createdat':ob1.created_at 
+	}
+	return JsonResponse(data)
+
+def new_like(request):
+	varm= Like.objects.raw('select * from Blog_like where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ')')
+	if(varm): # lw mwgod l record mn l awl update l value
+		ob5 = Like.objects.get(id=varm.id)
+		ob5.state= request.GET.get('state',None)
+		ob5.save()
+	else: # lw msh mwgod create record gded 
+		form2 = likeform()
+		ob1= form2.save(commit=False)
+		ob1.state=request.GET.get('state',None)
+		ob1.user_id=1
+		ob1.post_id=request.GET.get('post_id',None)
+		ob1.save()
+	obblike = Like.objects.raw('select count(*) where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ' and state=1) ')
+	obbdislike = Like.objects.raw('select count(*) where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ' and state=0) ')
+	objectdeleted=0
+	if(obbdislike>2):
+		posttobedeleted=Post.objects.get(id=post_id)
+		posttobedeleted.delete()
+		objectdeleted=1
+	data = {
+	'numoflikes' : obblike,
+	'numofdislikes' : obbdislike,
+	'objectdeleted' : objectdeleted
 	}
 	return JsonResponse(data)
 
@@ -220,14 +250,6 @@ def comment_delete(request):
 	
 	return JsonResponse(data)
 
-
-
-
-
-
-
-
-
 def sub(request):
 
     catsub=Category.objects.filter(subscribe=request.user.id)
@@ -235,5 +257,4 @@ def sub(request):
     for i in catsub:
         cat_sub.append(i.id)
     return cat_sub
-
 
