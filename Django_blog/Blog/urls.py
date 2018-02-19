@@ -5,8 +5,6 @@ from django.contrib.auth.views import login,logout
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'(?P<post_id>[0-9]+)/(?P<user_id>[0-9]+)/deletecomment/(?P<comment_id>[0-9]+)$',views.comment_delete),
-    url(r'postpage/(?P<post_id>[0-9]+)/(?P<user_id>[0-9]+)/$',views.postPage),
     url(r'^single/$',views.new_comment),
     url(r'^triple/$',views.new_reply), 
     url(r'^double/$',views.comment_delete),
@@ -18,6 +16,8 @@ urlpatterns = [
     url(r'^login$',login, {'template_name':'blog/login_page.html'}),
     url(r'^logout$',logout, {'next_page':'/login'}),
     url(r'^register$', views.register),
+    url(r'^Post/(?P<post_id>[0-9]+)$',  views.postPage),
+    url(r'^Tag/(?P<tag_id>[0-9]+)$',  views.getPostsTag),
 
 
 ]

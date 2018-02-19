@@ -1,6 +1,7 @@
 
 from distutils.command import register
 from django.contrib.sessions import serializers
+from django.core.mail import send_mail
 from django.shortcuts import render, render_to_response, redirect
 from django.http import HttpResponse
 from .models import *
@@ -25,8 +26,9 @@ def allPosts(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     all_cat = getCat()
+    all_tag = getTag()
     sub_cat = sub(request)
-    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat}
+    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/home.html", context)
 
 
@@ -43,11 +45,19 @@ def search(request):
     except Post.DoesNotExist:
         found_entries = None
     all_cat = getCat()
+    all_tag = getTag()
     sub_cat = sub(request)
-    context = {"allPosts": found_entries, "tags": byTag, "allCat": all_cat, "subcat": sub_cat}
+    context = {"allPosts": found_entries, "tags": byTag, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/search.html", context)
 
-
+def getPostsTag(request,tag_id):
+    tag = Tag.objects.get(id=tag_id)
+    posts = Post.objects.filter(tag=tag.id).order_by('created_at')
+    all_cat = getCat()
+    sub_cat = sub(request)
+    all_tag = getTag()
+    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
+    return render(request, "blog/home.html", context)
 
 
 def getCat():
@@ -55,12 +65,18 @@ def getCat():
     cat=Category.objects.all()
     return cat
 
+def getTag():
+
+    tag=Tag.objects.all()
+    return tag
+
 
 def getPostsCat(request, cat_id):
     all_posts = Post.objects.filter(cat_id= cat_id).order_by('created_at')
     all_cat = getCat()
+    all_tag = getTag()
     sub_cat = sub(request)
-    context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat}
+    context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/home.html", context)
 
 
@@ -80,6 +96,10 @@ def subscribe(request):
 
     else:
 		Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
+		cat = Category.objects.get(id=cat_id)
+		send_mail('Category Subscription',
+				  ' hello ' + request.user.username + ', you have subscribed successfully in ' + cat.name + ' welcome aboard',
+				  'myblog@blog.com', [request.user.email])
 		data = {
 			'x': 2
 
@@ -124,10 +144,10 @@ def postPage(request,post_id,user_id):
 		xx.append(varg)
 		ob5 = User.objects.get(id=x.user_id)
 		xx1.append(ob5)
-	zipped_data= zip(ob1,xx,xx1)	
+	zipped_data= zip(ob1,xx,xx1)
 	xx1=[]
 	xx11=[]
-	ob2 = Reply.objects.all()  
+	ob2 = Reply.objects.all()
 	for x1 in ob2:
 		varg =filterwithoutbadwords(x1.body)
 		xx1.append(varg)
@@ -150,7 +170,7 @@ def postPage(request,post_id,user_id):
 	#	ob1.body=varf
 	#	ob1.save()
 
-	
+
 	return render(request, 'postpage.html', context)
 
 def new_comment(request):
