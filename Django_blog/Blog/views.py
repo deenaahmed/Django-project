@@ -1,5 +1,4 @@
 
-<<<<<<< HEAD
 from distutils.command import register
 from django.contrib.sessions import serializers
 from django.core.mail import send_mail
@@ -9,24 +8,20 @@ from .models import *
 from .forms import commentform,replyform, UserLogin,RegistrationForm
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template import RequestContext
-=======
 
 from django.shortcuts import render, render_to_response
 
 from .forms import *
 from django.http import JsonResponse
 
->>>>>>> master
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
 from .models import *
-<<<<<<< HEAD
 from django.template import RequestContext
 from django.contrib.auth import authenticate,get_user_model,login,logout
-=======
 import re
 
->>>>>>> master
+
 
 def allPosts(request):
     all_posts = Post.objects.all()
@@ -41,11 +36,9 @@ def allPosts(request):
     all_cat = getCat()
     all_tag = getTag()
     sub_cat = sub(request)
-<<<<<<< HEAD
     context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
-=======
-    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat, "alltag":all_tag}
->>>>>>> master
+
+
     return render(request, "blog/home.html", context)
 
 
@@ -64,10 +57,9 @@ def search(request):
     all_cat = getCat()
     all_tag = getTag()
     sub_cat = sub(request)
-<<<<<<< HEAD
-=======
+
     all_tag = getTag()
->>>>>>> master
+
     context = {"allPosts": found_entries, "tags": byTag, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/search.html", context)
 
@@ -79,13 +71,8 @@ def getPostsTag(request,tag_id):
     all_tag = getTag()
     context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/home.html", context)
-<<<<<<< HEAD
-=======
 
 
-
-
->>>>>>> master
 
 
 def getCat():
@@ -104,12 +91,10 @@ def getPostsCat(request, cat_id):
     all_cat = getCat()
     all_tag = getTag()
     sub_cat = sub(request)
-<<<<<<< HEAD
     context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
-=======
+
     all_tag = getTag()
-    context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat, "alltag":all_tag}
->>>>>>> master
+
     return render(request, "blog/home.html", context)
 
 
@@ -126,7 +111,7 @@ def subscribe(request):
         }
 
     else:
-<<<<<<< HEAD
+
 		Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
 		cat = Category.objects.get(id=cat_id)
 		send_mail('Category Subscription',
@@ -138,14 +123,7 @@ def subscribe(request):
 		}
 
 		return JsonResponse(data)
-=======
-        Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
-        cat=Category.objects.get(id=cat_id)
-        send_mail('Category Subscription', ' hello '+request.user.username+', you have subscribed successfully in '+cat.name+' welcome aboard', 'myblog@blog.com', [request.user.email])
-        data = {
-            'x': 2
-        }
->>>>>>> master
+
 
     return JsonResponse(data)
 
@@ -213,16 +191,13 @@ def postPage(request,post_id):
 	'postdislike':postdislike
 	}
 
-<<<<<<< HEAD
 
-	return render(request, 'postpage.html', context)
-=======
 	return render(request, 'blog/postpage.html', context)
 
 
 
 
->>>>>>> master
+
 
 def new_comment(request):
 	form = commentform()
@@ -309,7 +284,7 @@ def sub(request):
         cat_sub.append(i.id)
     return cat_sub
 
-<<<<<<< HEAD
+
 
 User = get_user_model()
 def login(request):
@@ -353,5 +328,3 @@ def logout(request):
 
 
 
-=======
->>>>>>> master
