@@ -1,4 +1,13 @@
 
+from distutils.command import register
+from django.contrib.sessions import serializers
+from django.core.mail import send_mail
+from django.shortcuts import render, render_to_response, redirect
+from django.http import HttpResponse
+from .models import *
+from .forms import commentform,replyform, UserLogin,RegistrationForm
+from django.http import HttpResponseRedirect, JsonResponse
+from django.template import RequestContext
 
 from django.shortcuts import render, render_to_response
 
@@ -8,7 +17,10 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
 from .models import *
+from django.template import RequestContext
+from django.contrib.auth import authenticate,get_user_model,login,logout
 import re
+
 
 
 def allPosts(request):
@@ -24,7 +36,9 @@ def allPosts(request):
     all_cat = getCat()
     all_tag = getTag()
     sub_cat = sub(request)
-    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat, "alltag":all_tag}
+    context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
+
+
     return render(request, "blog/home.html", context)
 
 
@@ -41,8 +55,11 @@ def search(request):
     except Post.DoesNotExist:
         found_entries = None
     all_cat = getCat()
-    sub_cat = sub(request)
     all_tag = getTag()
+    sub_cat = sub(request)
+
+    all_tag = getTag()
+
     context = {"allPosts": found_entries, "tags": byTag, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/search.html", context)
 
@@ -54,8 +71,6 @@ def getPostsTag(request,tag_id):
     all_tag = getTag()
     context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
     return render(request, "blog/home.html", context)
-
-
 
 
 
@@ -74,9 +89,12 @@ def getTag():
 def getPostsCat(request, cat_id):
     all_posts = Post.objects.filter(cat_id= cat_id).order_by('created_at')
     all_cat = getCat()
-    sub_cat = sub(request)
     all_tag = getTag()
-    context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat, "alltag":all_tag}
+    sub_cat = sub(request)
+    context = {"allPosts": all_posts, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag}
+
+    all_tag = getTag()
+
     return render(request, "blog/home.html", context)
 
 
@@ -93,12 +111,19 @@ def subscribe(request):
         }
 
     else:
-        Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
-        cat=Category.objects.get(id=cat_id)
-        send_mail('Category Subscription', ' hello '+request.user.username+', you have subscribed successfully in '+cat.name+' welcome aboard', 'myblog@blog.com', [request.user.email])
-        data = {
-            'x': 2
-        }
+
+		Category.subscribe.through.objects.create(category_id=cat_id, user_id=request.user.id)
+		cat = Category.objects.get(id=cat_id)
+		send_mail('Category Subscription',
+				  ' hello ' + request.user.username + ', you have subscribed successfully in ' + cat.name + ' welcome aboard',
+				  'myblog@blog.com', [request.user.email])
+		data = {
+			'x': 2
+
+		}
+
+		return JsonResponse(data)
+
 
     return JsonResponse(data)
 
@@ -146,10 +171,10 @@ def postPage(request,post_id):
 		xx.append(varg)
 		ob5 = User.objects.get(id=x.user_id)
 		xx1.append(ob5)
-	zipped_data= zip(ob1,xx,xx1)	
+	zipped_data= zip(ob1,xx,xx1)
 	xx1=[]
 	xx11=[]
-	ob2 = Reply.objects.all()  
+	ob2 = Reply.objects.all()
 	for x1 in ob2:
 		varg =filterwithoutbadwords(x1.body)
 		xx1.append(varg)
@@ -166,7 +191,9 @@ def postPage(request,post_id):
 	'postdislike':postdislike
 	}
 
+
 	return render(request, 'blog/postpage.html', context)
+
 
 
 
@@ -251,10 +278,53 @@ def comment_delete(request):
 	return JsonResponse(data)
 
 def sub(request):
-
     catsub=Category.objects.filter(subscribe=request.user.id)
     cat_sub=[]
     for i in catsub:
         cat_sub.append(i.id)
     return cat_sub
+
+
+
+User = get_user_model()
+def login(request):
+	form = UserLogin(request.POST or None)
+	if form.is_valid():
+		username = form.cleaned_data.get("username")
+		password = form.cleaned_data.get("password")
+	return render(request, "blog/login_page.html", {"form" : form})
+
+
+def register(request):
+	if request.method == "POST":
+		form = RegistrationForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect("/home")
+	else:
+		form = RegistrationForm()
+
+	return render(request, "blog/register.html", {"form": form})
+
+
+def logout(request):
+	return render(request, "logout_page.html", {})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

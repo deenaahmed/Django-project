@@ -43,16 +43,17 @@
             </li>
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Logout</a>
+              <a class="nav-link" href="/logout">Logout</a>
             </li>
             {% if user.is_superuser %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Manage Blog</a>
+              <a class="nav-link" href="/admin">Manage Block</a>
+
             </li>
             {% endif %}
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Login/Register</a>
+              <a class="nav-link" href="/login">Login/Register</a>
             </li>
 
             {% endif %}
