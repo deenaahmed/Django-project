@@ -7,11 +7,9 @@ from .models import *
 from .forms import commentform, RegistrationForm
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from .models import Post, Like
 from django.http import HttpResponseRedirect
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
-from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.shortcuts import render
 from .forms import RegistrationForm
@@ -50,7 +48,6 @@ def allPosts(request):
     context = {"allPosts": posts, "allCat": all_cat, "subcat": sub_cat}
     return render(request, "blog/home.html", context)
 
-
 def search(request):
     found_entries = Post.objects.filter(title__icontains=request.GET['term']).order_by('created_at')
     context = {"allPosts": found_entries}
@@ -58,38 +55,56 @@ def search(request):
 
 def likePost(request,post_id,user_id):
     if request.method == 'GET':
-        post_id = post_id
-        likedpost = Post.objects.get(id=post_id)  # getting the liked posts
-        try:
-            likecheck=Like.objects.get(post=post_id,user_id=user_id)
-        except:
 
-            like = Like(user_id= user_id, post=likedpost)  # Creating Like Object
-            like.state = 1
+        likedpost = Post.objects.get(id=post_id)  # getting the liked posts
+        likecheck=Like.objects.filter(post=post_id,user_id=user_id,state=1)
+        if likecheck:
+            likecheck.delete()
+        else:
+            like = Like.objects.create(user_id=user_id, post=likedpost,state = 1)
+
             like.save()  # saving it to store in database
         return HttpResponse("Success!")  # Sending an success response
     else:
         return HttpResponse("Request method is not a GET")
 
-
-def dislikePost(request,post_id,user_id):
-    counter = 0
-    if request.method == 'GET':
-        post_id = request.GET['post_id']
-        dislikedpost = Post.objects.get(pk=post_id)  # getting the disliked posts
-        try:
-            Objn = Like.objects.get(user_id=user_id, post=dislikedpost)
-        except:
-            Objn = Like(user_id=user_id, post=dislikedpost)  # Creating DisLike Object
-        objn.state = 0
-        counter += 1
-        if (counter > 10):
-            dislikedpost.delete()
-        else:
-            Objn.save()  # saving it to store in database
-            return HttpResponse("Success!")  # Sending an success response
+def dislikePost(request,user_id,post_id):
+    post = Post.objects.filter(id=post_id)
+    mypost = Post.objects.get(id=post_id)
+    usr=User.objects.get(id=user_id)
+    row=Like.objects.all().filter(state=0, user=usr, post=post[0])
+    row2 = Like.objects.all().filter(state=1, user=usr, post=post[0])
+    if row.exists():
+        deletelike=Like.objects.get(state=0, user=usr, post=post[0])
+        deletelike.delete()
     else:
-        return HttpResponse("Request method is not a GET")
+        Like.objects.create(state=0, user=usr, post=post[0])
+        if row2.exists():
+            deletelike = Like.objects.get(state=1, user=usr, post=post[0])
+            deletelike.delete()
+            postdel = Like.objects.filter(state=0, post=mypost).count()
+            if postdel == 10:
+                mypost.delete()
+                return render("request", "home/home.html")
+
+    return HttpResponse("Success!")  # Sending an success response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def filterwithoutbadwords(comment):
@@ -119,10 +134,7 @@ def postPage(request, post_id, user_id):
     form = commentform()
     ob = Post.objects.get(id=post_id)
     ob1 = Comment.objects.raw("select * from Blog_comment where post_id=post_id")
-    likecount=len(Like.objects.all())
-    dislikecount=len(Like.objects.all())
-
-
+    like_list = Like.objects.all().count()
     xx = []
     index = 0
     for x in ob1:
@@ -139,8 +151,7 @@ def postPage(request, post_id, user_id):
                'comment_body': xx,
                'zipped_data': zipped_data,
                'reply_list': ob2,
-               'likecount':likecount,
-               'dislikecount':dislikecount
+               'like_list': like_list,
                }
     if request.method == "POST":
         # lcomment=Comment.objects.raw("select * from Blog_comment where post_id=post_id")

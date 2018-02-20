@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^ajax/sub/$', views.subscribe),
     url(r'postpage/(?P<post_id>[0-9]+)/(?P<user_id>[0-9]+)/likepost$',views.likePost),
     #url(r'^dislikePost/$', views.dislikePost, name='dislikepost'),   # likepost view at /likepost
+    #url(r'postpage/(?P<post_id>[0-9]+)/(?P<user_id>[0-9]+)/dislikepost$', views.dislikePost),
     url(r'postpage/(?P<post_id>[0-9]+)/(?P<user_id>[0-9]+)/dislikepost$', views.dislikePost),
 
     url(r'^admin/', admin.site.urls),
