@@ -21,6 +21,10 @@ sudo apt install python-pip
 pip install setuptools
 ```
 
+
+```
+pip install --upgrade django-crispy-forms```
+
 Here is the final step to be able to run the project
 
 ```
