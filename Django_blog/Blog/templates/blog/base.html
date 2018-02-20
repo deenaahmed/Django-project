@@ -19,31 +19,6 @@
 {% block javascript %}
 <script>
 
-/*$('.likebutton').click(function () {
-    if($('.likebutton')[0].style.backgroud-color=="blue" )   {
-        $(this)[0].style.backgroudColor="white"
-        $('.dislikebutton')[0].style.backgroudColor="blue"
-    }
-    else{
-        console.log("kan white ")
-        $(this)[0].style.backgroudColor="blue"
-        $('.dislikebutton')[0].style.backgroudColor="white"
-    }
-
-});
-$('.dislikebutton').click(function () {
-    if($('.dislikebutton').style.backgroud-color=="blue" )   {
-        $('.dislikebutton').style.backgroudColor="white"
-        $('.likebutton').style.backgroud-color="blue"
-    }
-    else{
-       $('.likebutton').style.backgroud-color="white"
-       $('.dislikebutton').style.backgroud-color="blue" 
-    }
-
-});*/
-
-
 
 $(".submit").click(function () {
       console.log( $(this).attr('value') );
@@ -234,6 +209,66 @@ else
 }
 });
 
+
+
+
+$('.dislikebutton').click(function(){
+    var catid;
+    post_id = $(this).attr("data-catid");
+    $.ajax({
+        url: '/dislikepost/',
+        data:{
+        	'post_id':post_id
+    	},
+    	dataType: 'json',
+        success: function( data )
+        {
+
+
+           if(data.disCount==10)
+           {
+            /*var modal = $("#myModal")
+
+                console.log(modal)
+                document.getElementById("myModal").style.display = "block"; */
+
+            window.location.replace("http://127.0.0.1:8000/")
+           }
+           likebutton=$("#likecount")
+            dislikebutton=$("#discount")
+            likebutton.html("Likes:"+data.likesCount);
+
+
+            dislikebutton.html("Dislikes:"+data.disCount)
+
+        }
+     });});
+
+
+     $('.likebutton').click(function(){
+    var catid = $(this).attr("data-catid")
+    $.ajax(
+    {
+        url: "/likepost/",
+        data:{
+         'post_id': catid
+        },
+        dataType: 'json',
+        success: function( data )
+        {
+
+            $( '#like'+ catid ).remove();
+            likebutton=$("#likecount")
+            dislikebutton=$("#discount")
+            likebutton.html("Likes:"+data.likesCount);
+
+
+            dislikebutton.html("Dislikes:"+data.disCount)
+
+
+
+        }
+     });});
 
 </script>
 {% endblock %}

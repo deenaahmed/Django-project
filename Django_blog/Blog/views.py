@@ -24,7 +24,8 @@ import re
 
 
 def allPosts(request):
-    all_posts = Post.objects.all()
+
+    all_posts= Post.objects.all().order_by('created_at')
     page = request.GET.get('page',1)
     paginator = Paginator(all_posts, 5)
     try:
@@ -214,7 +215,7 @@ def new_comment(request):
 	ob1.user_id=request.user.id
 	ob1.body=request.GET.get('body',None)
 	ob1.save()
-	#ob1.created_at=formunix(ob1.created_at)
+	ob1.created_at = ob1.created_at.strftime("%b.%d, %Y, %I:%M%p")
 	body =filterwithoutbadwords(ob1.body)
 	data = {
 	'idd' :ob1.id,
@@ -233,6 +234,7 @@ def new_reply(request):
 	ob1.body=request.GET.get('bodyreply',None)
 	ob1.save()
 	#ob1.created_at=formunix(ob1.created_at)
+	ob1.created_at=ob1.created_at.strftime("%b.%d, %Y, %I:%M%p")
 	body =filterwithoutbadwords(ob1.body)
 	data = {
 	'idd' :ob1.id,
@@ -241,34 +243,6 @@ def new_reply(request):
 	'createdat':ob1.created_at 
 	}
 	return JsonResponse(data)
-
-def new_like(request):
-	varm= Like.objects.raw('select * from Blog_like where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ')')
-	if(varm): # lw mwgod l record mn l awl update l value
-		ob5 = Like.objects.get(id=varm.id)
-		ob5.state= request.GET.get('state',None)
-		ob5.save()
-	else: # lw msh mwgod create record gded 
-		form2 = likeform()
-		ob1= form2.save(commit=False)
-		ob1.state=request.GET.get('state',None)
-		ob1.user_id=1
-		ob1.post_id=request.GET.get('post_id',None)
-		ob1.save()
-	obblike = Like.objects.raw('select count(*) where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ' and state=1) ')
-	obbdislike = Like.objects.raw('select count(*) where (post_id=' + ob1.post_id + ' and user_id=' + ob1.user_id + ' and state=0) ')
-	objectdeleted=0
-	if(obbdislike>2):
-		posttobedeleted=Post.objects.get(id=post_id)
-		posttobedeleted.delete()
-		objectdeleted=1
-	data = {
-	'numoflikes' : obblike,
-	'numofdislikes' : obbdislike,
-	'objectdeleted' : objectdeleted
-	}
-	return JsonResponse(data)
-
 
 
 
@@ -319,18 +293,62 @@ def register(request):
 
 
 
+def dislikePost(request):
+	post_id = request.GET.get('post_id', None)
+	post = Post.objects.filter(id=post_id)
+	mypost = Post.objects.get(id=post_id)
+	usr=User.objects.get(id=request.user.id)
+	row=Like.objects.all().filter(state=0, user=usr, post=post[0])
+	row2 = Like.objects.all().filter(state=1, user=usr, post=post[0])
+	if row.exists():
+		deletelike=Like.objects.get(state=0, user=usr, post=post[0])
+		deletelike.delete()
+	else:
+		Like.objects.create(state=0, user=usr, post=post[0])
+        if row2.exists():
+            deletelike = Like.objects.get(state=1, user=usr, post=post[0])
+            deletelike.delete()
+	discount = Like.objects.filter(state=0, post=mypost).count()
+	likesCount = Like.objects.filter(state=1, post=mypost).count()
+	if discount == 2:
+		mypost.delete()
+
+
+	data = {
+		'disCount': discount,
+		'likesCount':likesCount
+	}
+	return JsonResponse(data)
 
 
 
 
 
+def likePost(request):
+	post_id = request.GET.get('post_id', None)
+	likedpost = Post.objects.get(id=post_id)
+	likecheck=Like.objects.filter(post=post_id,user_id=request.user.id)
+	if likecheck:
+		if(likecheck[0].state==1):
+			likecheck.delete()
+		else:
+
+
+			likecheck[0].state=1
+			likecheck[0].save()
 
 
 
+	else:
+		like = Like.objects.create(user_id=request.user.id, post=likedpost,state = 1)
+		like.save()  # saving it to store in database
 
+	likesCount = Like.objects.filter(state=1, post=likedpost).count()
+	discount = Like.objects.filter(state=0, post=likedpost).count()
 
+	data = {
 
-
-
-
-
+		'disCount': discount,
+		'likesCount':likesCount
+	}
+	return JsonResponse(data)
