@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,47 +8,73 @@
 {% extends "blog/base.html" %}
 {% block main_block %}
 
-	<style>
-	.divstyle{
-		border: 1px solid black;
-		
-	}
-	.divstyle1{
-		border: 1px solid black;
-	}
-	.divstylereply{
-		border: 1px solid black;
-	}
-	</style>
 
-<div class="card mb-4">
-           <a href="/Post/{{post_list.id}}"> <img class="card-img-top" src="{{ post_list.image.url }}" alt="Card image cap" width="200" height="270"></a>
-            <div class="card-body">
-              <h2 class="card-title">{{post_list.title}}</h2>
-              <p class="card-text">Category: {{post_list.cat}}</p>
-              <p class="card-text">{{post_list.body}}</p>
-            </div>
-            <div class="card-footer text-muted">
-              Posted on {{post_list.created_at}} by {{post_list.author}}
-            </div>
-            <div> Related tags:
-			{% for t in tag_list %}
-				<p><a href="/Tag/{{t.id}}">#{{t.name}}</a></p>
-		{% endfor %}
-		 <div>Likes: {{postlike}}</div> <div>Dislikes: {{postdislike}}</div> 
 
-	</div>
-          </div>
+
+
+
+
+
+     <div class="container">
+
+      <div class="row">
+
+        <!-- Blog Entries Column -->
+        <div class="col-md-8">
+
+          <h1 class="my-4">Welcome
+            <small>{{ user.username }}</small>
+          </h1>
+
+
+
+				 <div class="card mb-4">
+
+					<img class="card-img-top" src="{{ post_list.image.url }}" alt="Card image cap" width="200" height="270">
+
+					  <div class="card-body">
+						  <h2 class="card-title">{{post_list.title}}</h2>
+					  <p class="card-text">Category: {{post_list.cat}}</p>
+					  <p class="card-text">{{post_list.body}}</p>
+
+						 <div> Related tags:
+							{% for t in tag_list %}
+							<a href="/Tag/{{t.id}}">#{{t.name}}</a>
+						{% endfor %}
+						 <div id="likecount">Likes: {{postlike}}</div> <div id="discount">Dislikes: {{postdislike}}</div>
+
+                         </div>
+
+					  </div>	  <!-- card card body-->
+
+					  <div class="card-footer text-muted">
+						  Posted on {{post_list.created_at}} by {{post_list.author}}
+						</div>
+
+
+
+
+
+
+
+              </div> <!-- card mb4-->
+
+			         <!-- Pagination -->
+
+        </div> <!-- column -->
+
+        <!-- Sidebar Widgets Column -->
+{% include "blog/sidebar.html" %}
+      </div><!-- /.row -->
+
+
+    </div> <!--container-->
+
 	{% if user.is_authenticated %}
 	<p>
-	{% if obblike %}	
-	<button class='likebutton' id='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}' style="background-color: blue;">Like</button>
-	 <button class='dislikebutton' id='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: white;" data-catid='{{post_list.id}}'>Dislike</button>
-	 {% endif %}
-	 {% if obbdislike %}	
-	<button class='likebutton' id='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}' style="background-color: white;">Like</button>
-	 <button class='dislikebutton' id='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: blue;" data-catid='{{post_list.id}}'>Dislike</button>
-	 {% endif %}
+		<button class='likebutton' id='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}'  style="background-color: white;">Likes:</button>
+		<button class='dislikebutton' id='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: blue;" data-catid='{{post_list.id}}'>Dislikes:</button>
+
 	<br/>
 		<textarea id="comment" class="form-control" rows="4" placeholder="input comment!" ></textarea>
     <button class="btn btn-raised btn-primary pull-right" value="{{post_list.id}}" id="comment-formbutton">Add comment</button>
@@ -97,8 +122,12 @@
 	</div>
 	{% endfor %}
 	</div>
-	{% include "blog/sidebar.html" %}
-</body>
+
+
+
+
 
 {% endblock %}
+
+</body>
 </html>

@@ -18,5 +18,10 @@ urlpatterns = [
     url(r'^register$', views.register),
     url(r'^Post/(?P<post_id>[0-9]+)$',  views.postPage),
     url(r'^Tag/(?P<tag_id>[0-9]+)$',  views.getPostsTag),
+    url(r'^dislikepost/$', views.dislikePost),
+    url(r'^likepost/$',views.likePost),
+
+
 
 ]
+
