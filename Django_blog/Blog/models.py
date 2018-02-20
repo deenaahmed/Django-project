@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class Tag(models.Model):
@@ -70,7 +71,7 @@ class Reply(models.Model):
 
     body = models.TextField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=datetime.now)
 
 
 class Like(models.Model):
