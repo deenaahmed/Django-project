@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^single/$',views.new_comment),
     url(r'^triple/$',views.new_reply), 
     url(r'^double/$',views.comment_delete),
-    url(r'^home/$', views.allPosts),
+    url(r'^$', views.allPosts),
     url(r'^search/$', views.search),
     url(r'^Category/(?P<cat_id>[0-9]+)$',  views.getPostsCat),
     url(r'^ajax/sub/$', views.subscribe),
