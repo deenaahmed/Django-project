@@ -211,7 +211,7 @@ def new_comment(request):
 	form = commentform()
 	ob1= form.save(commit=False)
 	ob1.post_id=request.GET.get('post_id',None)
-	ob1.user_id=1
+	ob1.user_id=request.user.id
 	ob1.body=request.GET.get('body',None)
 	ob1.save()
 	#ob1.created_at=formunix(ob1.created_at)
@@ -229,7 +229,7 @@ def new_reply(request):
 	form1 = replyform()
 	ob1= form1.save(commit=False)
 	ob1.comment_id=request.GET.get('comment_id_reply',None)
-	ob1.user_id=1
+	ob1.user_id = request.user.id
 	ob1.body=request.GET.get('bodyreply',None)
 	ob1.save()
 	#ob1.created_at=formunix(ob1.created_at)

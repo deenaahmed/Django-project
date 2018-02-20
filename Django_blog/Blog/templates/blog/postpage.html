@@ -95,7 +95,7 @@
             </div>
             <div> Related tags:
 			{% for t in tag_list %}
-			<div>{{t.name}}</div>
+				<p><a href="/Tag/{{t.id}}">#{{t.name}}</a></p>
 		{% endfor %}
 		 <div>Likes: {{postlike}}</div> <div>Dislikes: {{postdislike}}</div> 
 
