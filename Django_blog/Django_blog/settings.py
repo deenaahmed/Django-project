@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -72,7 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Django_blog.wsgi.application'
-
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -80,9 +81,9 @@ WSGI_APPLICATION = 'Django_blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Django-blog',
+        'NAME': 'blog',
         'USER': 'root',
-        'PASSWORD': '0810',
+        'PASSWORD': '1234',
     }
 }
 
@@ -116,6 +117,9 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
+LOGIN_REDIRECT_URL = '/'
+
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'djangoteam4@gmail.com'
@@ -123,4 +127,6 @@ EMAIL_HOST_PASSWORD = 'djangoteam1234'
 EMAIL_PORT = 587
 
 
-CRISPY_TEMPLATE_PACK = 'uni_form'
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
