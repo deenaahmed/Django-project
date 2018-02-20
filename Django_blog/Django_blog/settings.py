@@ -125,3 +125,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'djangoteam4@gmail.com'
 EMAIL_HOST_PASSWORD = 'djangoteam1234'
 EMAIL_PORT = 587
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
