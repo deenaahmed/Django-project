@@ -181,6 +181,9 @@ def postPage(request,post_id):
 		ob5 = User.objects.get(id=x1.user_id)
 		xx11.append(ob5)
 	zipped_data1= zip(ob2,xx1,xx11)
+	all_cat = getCat()
+	all_tag = getTag()
+	sub_cat = sub(request)
 	context = {'post_list':ob,
 	'tag_list':obb,
 	'zipped_data':zipped_data,
@@ -188,7 +191,7 @@ def postPage(request,post_id):
 	'obblike':obblike,
 	'obbdislike':obbdislike,
 	'postlike':postlike,
-	'postdislike':postdislike
+	'postdislike':postdislike, "allCat": all_cat, "subcat": sub_cat,"alltag":all_tag
 	}
 
 
