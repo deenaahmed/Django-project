@@ -29,11 +29,11 @@
             {%  for ps in allPosts  %}
           <!-- Blog Post -->
           <div class="card mb-4">
-            <img class="card-img-top" src="{{ ps.image.url }}" alt="Card image cap" width="200" height="270">
+            <a href="/Post/{{ps.id}}">  <img class="card-img-top" src="{{ ps.image.url }}" alt="Card image cap" width="200" height="270"></a>
             <div class="card-body">
               <h2 class="card-title">{{ps.title}}</h2>
               <p class="card-text">{{ps.body}}</p>
-              <a href="#" class="btn btn-primary">Read More &rarr;</a>
+              <a href="/Post/{{ps.id}}" class="btn btn-primary">Read More &rarr;</a>
             </div>
             <div class="card-footer text-muted">
               Posted on {{ps.created_at}} by

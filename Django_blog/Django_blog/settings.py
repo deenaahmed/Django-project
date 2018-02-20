@@ -81,9 +81,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blog',
+        'NAME': 'Django-blog',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': '0810',
     }
 }
 

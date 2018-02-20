@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+	
 </head>
 <body>
 {% extends "blog/base.html" %}
 {% block main_block %}
-
-
-
-
 
 
 
@@ -45,6 +42,7 @@
 
                          </div>
 
+
 					  </div>	  <!-- card card body-->
 
 					  <div class="card-footer text-muted">
@@ -70,39 +68,82 @@
 
     </div> <!--container-->
 
+
+	<div class="container">
+
 	{% if user.is_authenticated %}
 	<p>
-		<button class='likebutton' id='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}'  style="background-color: white;">Likes:</button>
-		<button class='dislikebutton' id='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: blue;" data-catid='{{post_list.id}}'>Dislikes:</button>
 
+
+				 <button type="button" class=" likebutton btn btn-default btn-sm" value='Blog_like{{post_list.id}}' data-catid='{{post_list.id}}'>
+				<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like
+				 </button>
+
+				 <button type="button" class=" dislikebutton btn btn-default btn-sm" value='Blog_like{{post_list.id}}' data-catid='{{post_list.id}}'>
+				<i class="fa fa-thumbs-o-down" aria-hidden="true"></i> dislike
+				 </button>
 	<br/>
-		<textarea id="comment" class="form-control" rows="4" placeholder="input comment!" ></textarea>
-    <button class="btn btn-raised btn-primary pull-right" value="{{post_list.id}}" id="comment-formbutton">Add comment</button>
-    {% endif %}
-	<div id="allcomments">
+
+
+
+
+		<div class="container">
+  	<div class="row">
+    <div class="col-sm-10 col-sm-offset-1" id="logout">
+        <div class="page-header">
+            <h3 class="reviews">Leave your comment</h3>
+			<h2 class="lead">Comments</h2>
+
+			<div class="form-group row">
+		<textarea id="comment" class="form-control col-md-6" rows="2"  placeholder="input comment!" ></textarea>
+    	</div>
+		    	<button class="btn btn-primary btn-circle text-uppercase mr-3 " value="{{post_list.id}}" id="comment-formbutton">Add comment</button>
+
+		{% endif %}
+
+
+		</div>
+
+
+
+
+
+
+
+
+		<div id="allcomments">
 		{% for c,cc,ccc in zipped_data %}
-	<br/>
-		<div class="divstyle comment " id="class{{c.id}}"> <!-- viewrepliesbutton kan feh hna class -->
+		<div class="divstyle comment comment-custom " id="class{{c.id}}"> <!-- viewrepliesbutton kan feh hna class -->
+			<p class="lead ">
 			{{ccc}}
+			</p>
 			<br/>
+		<p class="jumbotron">
 			{{cc}}
+			</p>
 			<br/>
 			{{c.created_at}}
 			<br/>
 			<br/>
+
 			{% if user.is_authenticated %}
+
 			<button class="replyclass" name="{{c.id}}">Reply</button>
+
 			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
+
 			{% if user.is_superuser %}
-			 <button name="{{c.id}}" class="deleteclass" >Delete</button> 
+			 <button name="{{c.id}}" class="deleteclass" >Delete</button>
 			{% endif %}
             {% else %}
 			<button class="viewrepliesbutton" name="{{c.id}}" >View replies</button>
 			{% endif %}
-		<div id="allreplies{{ c.id }}" class=" {{c.id}}" style="display: none;">
-		{% for r,rr,rrr in zipped_data1 %}
+		</div>
+
+			<div id="allreplies{{ c.id }}" class=" {{c.id}} offset-1" style="display: none;">
+			{% for r,rr,rrr in zipped_data1 %}
 			{% ifequal r.comment_id c.id %}
-			<div  class="divstylereply {{c.id}}"  >
+			<div  class=" {{c.id}} comment-custom"  >
 			{{rrr}}
 			<br/>
 			{{rr}}
@@ -115,19 +156,33 @@
 		{% if user.is_authenticated %}
 		<div  id="replyform{{c.id}}" class="{{c.id}}" >
             <textarea  class="{{c.id}}" name="parent_id"  id="input{{ c.id }}" ></textarea>
-           <button  class="reply-formbutton {{c.id}}" value="{{ c.id }}">Reply</button> 
+           <button  class="  reply-formbutton {{c.id}}" value="{{ c.id }}">Reply</button>
         </div>
-        {% endif %}
-	</div>
-	</div>
+        {% endif %}</div>
+
 	{% endfor %}
 	</div>
 
 
 
 
+<!------------------ POST PAGE  ------------------------>
+
+
+	  <!------------------ POST PAGE  ------------------------>
+
+
+
 
 {% endblock %}
 
+
+
+
+
+
+
 </body>
+
+
 </html>
