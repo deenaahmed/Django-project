@@ -18,7 +18,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
 from .models import *
 from django.template import RequestContext
-from django.contrib.auth import authenticate,get_user_model,login,logout
+from django.contrib.auth import authenticate,get_user_model,login as login_auth,logout
 import re
 
 
@@ -299,17 +299,15 @@ def register(request):
 	if request.method == "POST":
 		form = RegistrationForm(request.POST)
 		if form.is_valid():
-			form.save()
-			return redirect("/home")
+			user = form.save()
+			user.backend = 'django.contrib.auth.backends.ModelBackend'
+			login_auth(request,user)
+			return redirect("/")
+
 	else:
 		form = RegistrationForm()
 
 	return render(request, "blog/register.html", {"form": form})
-
-
-def logout(request):
-	return render(request, "logout_page.html", {})
-
 
 
 
