@@ -6,11 +6,9 @@ from .forms import commentform, replyform
 from django.http import JsonResponse
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-<<<<<<< HEAD
-from django.core.mail import send_mail
-=======
 
->>>>>>> 526d285baaee747cd46a88bff2691d9450be0d0d
+from django.core.mail import send_mail
+
 from .models import *
 
 
@@ -160,12 +158,18 @@ def postPage(request,post_id):
 		ob5 = User.objects.get(id=x1.user_id)
 		xx11.append(ob5)
 	zipped_data1= zip(ob2,xx1,xx11)
+	all_cat = getCat()
+	sub_cat = sub(request)
+	all_tag = getTag()
 	context = {'post_list':ob,
 	'tag_list':obb,
 	'comment_list':ob1,
 	'comment_body':xx,
 	'zipped_data':zipped_data,
 	'zipped_data1':zipped_data1,
+	"allCat": all_cat,
+	"subcat": sub_cat,
+	"alltag":all_tag
 	}
 
 
