@@ -26,7 +26,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark  fixed-top navbar-custom">
       <div class="container" id="top-section">
 
-        <a class="navbar-brand" href="/">My Blog</a>
+        <a class="navbar-brand" href="/"><img class="card-img-top" src="http://127.0.0.1:8000/media/icon.png" alt="Card image cap" width="80" height="50"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -49,7 +49,7 @@
             </li>
             {% if user.is_superuser %}
             <li class="nav-item">
-              <a class="nav-link" href="/admin">Manage Block</a>
+              <a class="nav-link" href="/admin">Manage Blog</a>
 
             </li>
             {% endif %}

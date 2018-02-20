@@ -9,6 +9,9 @@
 {% extends "blog/base.html" %}
 {% block main_block %}
 
+
+
+
      <div class="container">
 
       <div class="row">
@@ -31,13 +34,14 @@
 					  <p class="card-text">Category: {{post_list.cat}}</p>
 					  <p class="card-text">{{post_list.body}}</p>
 
-						<div> Related tags:
-			{% for t in tag_list %}
-				<p><a href="/Tag/{{t.id}}">#{{t.name}}</a></p>
-		{% endfor %}
-		 <div>Likes: {{postlike}}</div> <div>Dislikes: {{postdislike}}</div>
+						 <div> Related tags:
+							{% for t in tag_list %}
+							<a href="/Tag/{{t.id}}">#{{t.name}}</a>
+						{% endfor %}
+						 <div id="likecount">Likes: {{postlike}}</div> <div id="discount">Dislikes: {{postdislike}}</div>
 
-	</div>
+                         </div>
+
 
 					  </div>	  <!-- card card body-->
 
@@ -69,28 +73,15 @@
 
 	{% if user.is_authenticated %}
 	<p>
-	{% if obblike %}
 
-	<button class='likebutton' value='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}' style="background-color: blue;">Like</button>
-		{% else%}
 
-					<button class='likebutton' value='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}' style="background-color: white;">Like</button>
-				 <button type="button" class="btn btn-default btn-sm">
+				 <button type="button" class=" likebutton btn btn-default btn-sm" value='Blog_like{{post_list.id}}' data-catid='{{post_list.id}}'>
 				<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like
 				 </button>
 
-
-	 {% endif %}
-	 {% if obbdislike %}
-	 <button class='dislikebutton' value='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: blue;" data-catid='{{post_list.id}}'>Dislike</button>
-	 {% else %}
-			 <button class='dislikebutton' value='Blog_dislike{{post_list.id}}' href='dislikepost' style="background-color: white;" data-catid='{{post_list.id}}'>Dislike</button>
-
-		<button class='likebutton' value='Blog_like{{post_list.id}}' href='likepost' data-catid='{{post_list.id}}' style="background-color: white;">Like</button>
-				 <button type="button" class="btn btn-default btn-sm">
+				 <button type="button" class=" dislikebutton btn btn-default btn-sm" value='Blog_like{{post_list.id}}' data-catid='{{post_list.id}}'>
 				<i class="fa fa-thumbs-o-down" aria-hidden="true"></i> dislike
 				 </button>
-		{% endif %}
 	<br/>
 
 
@@ -171,13 +162,15 @@
 
 	{% endfor %}
 	</div>
-		</div>
+
+
 
 
 <!------------------ POST PAGE  ------------------------>
 
 
 	  <!------------------ POST PAGE  ------------------------>
+
 
 
 
@@ -190,5 +183,6 @@
 
 
 </body>
+
 
 </html>
