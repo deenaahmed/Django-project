@@ -311,7 +311,7 @@ def dislikePost(request):
             deletelike.delete()
 	discount = Like.objects.filter(state=0, post=mypost).count()
 	likesCount = Like.objects.filter(state=1, post=mypost).count()
-	if discount == 2:
+	if discount == 10:
 		mypost.delete()
 
 
